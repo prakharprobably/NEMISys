@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+{% block body %}
+<h>Upload an excel to append to participantdb and schooldb</h>
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="file"/>
+    <button type="submit">Submit</button>
+</form>
+{% endblock %}

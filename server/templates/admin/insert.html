@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Add staff{% endblock %}
+{% block body %}
+<form method="POST">
+    <div>
+    <h>Add Staff</h><br/>
+    <label for="uuid">UUID</label>
+    <input id="uuid" name="uuid" placeholder="Enter UUID" /><br/>
+
+    <label for="passkey">Password</label>
+    <input id="passkey" name="passkey" placeholder="Enter Password" /><br/>
+
+    <label for="name">Name</label>
+    <input id="name" name="name" placeholder="Enter Name" /><br/>
+
+    <label for="class">Class</label>
+    <input id="class" name="class" placeholder="Enter Class" /><br/>
+
+    <label for="section">Section</label>
+    <input id="section" name="section" placeholder="Enter Section" /><br/>
+
+    <label for="event">Event</label><br/>
+    <select id="event" name="event">
+        <option value="pyrathon">Pyrathon</option>
+        <option value="all">All</option>
+    </select><br/>
+
+    <label for="permissions">Select Permissions</label>
+    <div>
+        <input type="checkbox" id="TeacherIncharge" name="permissions" value="TC">
+        <label for="TeacherIncharge">Teacher Incharge</label><br/>
+
+        <input type="checkbox" id="EventHead" name="permissions" value="EI">
+        <label for="EventHead">Event Head</label><br/>
+
+        <input type="checkbox" id="EventIncharge" name="permissions" value="SI">
+        <label for="EventIncharge">Event Incharge</label><br/>
+
+        <input type="checkbox" id="LiaisoningHead" name="permissions" value="LH">
+        <label for="LiaisoningHead">Liaisoning Head</label><br/>
+
+        <input type="checkbox" id="LiaisoningStaff" name="permissions" value="LS">
+        <label for="LiaisoningStaff">Liaisoning Staff</label><br/>
+
+        <input type="checkbox" id="Judge" name="permissions" value="'JD'">
+        <label for="Judge">Judge</label><br/>
+
+        <input type="checkbox" id="ResultCompilation" name="permissions" value="RC">
+        <label for="ResultCompilation">Result Compilation</label><br/>
+
+        <input type="checkbox" id="Volunteer" name="permissions" value="VL">
+        <label for="Volunteer">Volunteer</label>
+    </div>
+    <br/>
+    <button type="submit">Add</button>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+{% block body %}
+<form method="POST">
+    <div>
+    <h>Log in to your Technolympics<sub>2.0.25</sub> account</h><br/>
+    <label for="uuid">UUID</label>
+    <input id="uuid" name="uuid" placeholder="Enter UUID" /><br/>
+    <label for="passkey">Password</label>
+    <input type="password" id="passkey" name="passkey" placeholder="Enter Password" /><br/>
+    </div>
+    <br/>
+    <button type="submit">Log in</button>
+    <script>
+        document.querySelector("form").addEventListener("submit", function(e) {
+            const passInput = document.getElementById("passkey");
+            const password = passInput.value;
+        
+            // Use Web Crypto API to hash the password
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+        
+            e.preventDefault(); // Stop normal form submission
+        
+            crypto.subtle.digest("SHA-256", data).then(hash => {
+                const hashArray = Array.from(new Uint8Array(hash));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        
+                passInput.value = hashHex; // Replace password with SHA-256 hash
+        
+                e.target.submit(); // Now submit the form with the hashed password
+            });
+        });
+        </script>        
+</form>
+{% endblock %}

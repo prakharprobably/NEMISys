@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+{% block body %}
+<h2>Enter School ID</h2>
+    <form method="POST", target="actionPanel">
+        <input type="text" name="sid" required>NAME
+        <input type="submit" value="Fetch Participants">
+    </form>
+    <iframe name="actionPanel" src="/registry/attendance", height="400", width="800"></iframe>
+    <script>
+        function updateIframe(event) {
+            event.preventDefault(); // prevent form submission
+            const sid = document.getElementById("sidInput").value;
+            const iframe = document.getElementById("actionPanel");
+            iframe.src = `/registry/attendance?sid=${encodeURIComponent(sid)}`;
+        }
+    </script>
+{% endblock %}

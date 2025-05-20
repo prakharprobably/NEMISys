@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %} 
+    {{ Title }} 
+{% endblock %}
+{% block body %}
+<form method="POST">
+<table>
+    <tr>
+        {% for element in data[0] %}
+            <th>{{ element }}</th>
+        {% endfor %}
+        <th>Present</th>  {# Add a header for the checkbox column #}
+    </tr>
+    {% for row in data[1:] %}
+    <tr>
+        {% for cell in row %}
+            <td>{{ cell }}</td>
+        {% endfor %}
+        <td>
+            <input type="checkbox" name="attendance_{{ row[0] }}" {% if row[-1] %}checked{% endif %}>
+            <input type="hidden" name="unchecked_ids" value="{{ row[0] }}" {% if row[-1] %}disabled{% endif %}>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<input type="submit" value="Update Attendance">
+</form>
+{% endblock %}

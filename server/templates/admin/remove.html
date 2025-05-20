@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Remove staff{% endblock %}
+{% block body %}
+<form method="POST">
+    <div>
+    <h>Remove Staff</h><br/>
+    <label for="uuid">UUID</label>
+    <input id="uuid" name="uuid" placeholder="Enter UUID" /><br/>
+    <button type="submit">Remove</button>
+    </div>
+</form>
+{% endblock %}
