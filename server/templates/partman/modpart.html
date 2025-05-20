@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Edit Staff{% endblock %}
+{% block body %}
+<form method="POST">
+    <div>
+        <h>Edit Participant</h><br/>
+
+        <label for="uuid">UUID</label>
+        <input id="uuid" name="uuid" placeholder="Enter UUID" maxlength="6"
+               value="{{ oldData[0] if oldData else '' }}"
+               oninput="autoSubmitIfReady(this)" /><br/>
+
+        <label for="name">Name</label>
+        <input id="name" name="name" placeholder="Enter Name"
+               value="{{ oldData[1] if oldData else '' }}" /><br/>
+
+        <label for="class">Class</label>
+        <input id="class" name="class" placeholder="Enter Class"
+               value="{{ oldData[2] if oldData else '' }}" /><br/>
+
+        <label for="event">Event</label><br/>
+        <select id="event" name="event">
+            <option value="pyrathon" {% if oldData and oldData[4] == "pyrathon" %}selected{% endif %}>Event 1</option>
+            <option value="all" {% if oldData and oldData[4] == "all" %}selected{% endif %}>All</option>
+        </select><br/>
+        <br/>
+        <button type="submit">Edit</button>
+    </div>
+</form>
+
+<script>
+    function autoSubmitIfReady(input) {
+        if (input.value.length === 6) {
+            const uuid = input.value;
+            const form = input.form;
+    
+            // Construct a query string and redirect the browser (GET request)
+            const url = new URL(window.location.href);
+            url.searchParams.set("uuid", uuid);
+            window.location.href = url.toString();
+        }
+    }
+    </script>
+{% endblock %}

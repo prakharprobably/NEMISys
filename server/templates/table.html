@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %} 
+    {{Title}} 
+{% endblock %}
+{% block body %}
+<table>
+    <tr>
+        {% for element in data[0] %}
+        <th>{{element}}</th>
+        {% endfor %}
+    </tr>
+    {% for row in data[1:] %}
+    <tr>
+        {% for element in row %}
+        <td>
+            {{element}}
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

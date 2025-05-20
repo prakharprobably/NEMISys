@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Change staff password{% endblock %}
+{% block body %}
+<form method="POST">
+    <div>
+    <h>Change Staff Password</h><br/>
+    <label for="uuid">UUID</label>
+    <input id="uuid" name="uuid" placeholder="Enter UUID" /><br/>
+
+    <label for="passkey">New Password</label>
+    <input id="passkey" name="passkey" placeholder="Enter Password" /><br/>
+    <button type="submit">Change</button>
+    </div>
+</form>
+{% endblock %}
