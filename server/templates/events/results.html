@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ event }} Grading{% endblock %}
+{% block body %}
+<h2>Grade Results for {{ event }}</h2>
+<form method="POST">
+    <table>
+        <tr>
+    {% for header in data[0] %}
+        {% set i = loop.index0 %}
+        {% if i == resInd %}
+            <th>Points</th>
+        {% else %}
+            <th>{{ header }}</th>
+        {% endif %}
+    {% endfor %}
+        </tr>
+        {% for row in data[1:] %}
+        <tr>
+            {% for cell in row %}
+                {% set i = loop.index0 %}
+                {% if i == resInd %}
+                    <td>
+                        <input type="text" id="{{ row[0] }}" name="{{ row[0] }}" value="{{cell}}">
+                    </td>
+                {% else %}
+                    <td>{{ cell }}</td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+
+    </table>
+    <input type="submit" value="Update Attendance">
+</form>
+{% endblock %}

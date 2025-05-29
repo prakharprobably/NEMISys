@@ -2,7 +2,7 @@ import psycopg2
 from psycopg2 import sql
 import json
 import os
-
+from  . import eventdbwrapper as evdb
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CREDS_PATH = os.path.join(BASE_DIR, 'creds.json')
 
@@ -99,12 +99,12 @@ def close(curcon):
 def seperateIntoEvents(curconn):
     cur,conn = curconn
     onsites = creds["onsiteEvents"]
+    prelds = creds["preldEvents"]
     for event in onsites:
-        att=sql.Identifier(event+"Attendance")
-        cur.execute(sql.SQL("""CREATE TABLE {att} AS
-                               SELECT name, class, sid, sname FROM Participants WHERE event = %s AND attendance = TRUE
-                            """).format(att=att), (event,))
-        cur.execute(sql.SQL("""ALTER TABLE {att} ADD COLUMN attendance BOOLEAN DEFAULT FALSE""").format(att=att))
+        if event in prelds:
+            evdb.genAtt(curconn, event, "prelims")
+        else:
+            evdb.genAtt(curconn, event, "finals")
     conn.commit()
     print("SEPERATED")
 
@@ -113,29 +113,13 @@ def revert(curconn):
     cur,conn = curconn
     onsites = creds["onsiteEvents"]
     for event in onsites:
-        att=sql.Identifier(event+"Attendance")
-        pri=sql.Identifier(event+"ResultsPri")
-        fin=sql.Identifier(event+"ResultsFin")
-        cur.execute(sql.SQL("""DROP TABLE IF EXISTS {att},{pri},{fin}""").format(att=att,pri=pri,fin=fin))
+        priatt=sql.Identifier(event+"AttendancePri")
+        finatt=sql.Identifier(event+"AttendanceFin")
+        prires=sql.Identifier(event+"ResultsPri")
+        finres=sql.Identifier(event+"ResultsFin")
+        cur.execute(sql.SQL("""DROP TABLE IF EXISTS {priatt}, {finatt},{prires},{finres}""").format(priatt=priatt,prires=prires,finatt=finatt, finres=finres))
         conn.commit()
     cur.execute(sql.SQL("""DROP TABLE IF EXISTS "Virtual WarriorsAttendance","Virtual WarriorsResultsPri","Virtual WarriorsResultsFin";"""))
-
-def generatePriRes(curconn, event):
-    cur,conn = curconn
-    res=sql.Identifier(event+"ResultsPri")
-    att=sql.Identifier(event+"Attendance")
-    cur.execute(sql.SQL("""SELECT sid, sname INTO {res} FROM {att} GROUP BY sid WHERE attendance = TRUE""").format(res=res, att=att))
-    cur.execute(sql.SQL("""ALTER TABLE {res} ADD COLUMN points INT DEFAULT 0""").format(res=res))
-    conn.commit()
-
-def generateFinRes(curconn, event):
-    cur,conn = curconn
-    fin=sql.Identifier(event+"ResultsFin")
-    pri=sql.Identifier(event+"ResultsPri")
-    limit = creds["limit"][event]
-    cur.execute(sql.SQL("""SELECT * INTO {fin} FROM {pri} ORDER BY points LIMIT %s""").format(fin=fin, res=res), (limit,))
-    cur.execute(sql.SQL("""UPDATE {res} SET points=0""").format(res=res))
-    conn.commit()
 
 def genVirtAtt(curconn):
     cur,conn = curconn
