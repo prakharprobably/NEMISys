@@ -95,9 +95,18 @@ def genTups(path):
                 nCell = pHeaders[pHeader] + str(row)
                 cCell = pHeaders[clss] + str(row)
                 name = sheet[nCell].value
-                pClass = sheet[cCell].value
+                try:
+                    pClass = int(sheet[cCell].value)
+                except:
+                    pClass = None
                 if name:
                     try:
+                        discord_key = f"{event} Discord Username of Participant {pnum}"
+                        discord_username = ""
+                        if discord_key in pHeaders:
+                            dCell = pHeaders[discord_key] + str(row)
+                            discord_username = sheet[dCell].value or ""
+
                         pTup = (
                             pid,
                             name.strip(),
@@ -105,7 +114,8 @@ def genTups(path):
                             event.strip(),
                             sid,
                             sName.strip(),
-                            False
+                            False,
+                            discord_username.strip()
                         )
                         participants.append(pTup)
                         pid += 1
@@ -116,4 +126,5 @@ def genTups(path):
         cell = headers['subEmail'] + str(row)
 
     return schools, participants
+
 

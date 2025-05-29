@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Confirmation Trigger{% endblock %}
+{% block body %}
+<form method="POST">
+    <label for="trigger">Select Event</label>
+    <select name="trigger" id="trigger">
+        <option value="conRegs">Conclude Registerations</option>
+        <option value="comVirt">Commence Virtual Warriors</option>
+        <option value="comRes">Commence Result Compilation</option>
+    </select>
+    <button type="submit">Trigger</button>
+</form>
+<br>
+<form method="POST">
+    <label for="revert">Select Event</label>
+    <select name="revert" id="revert">
+        <option value="rollback">Roll back</option>
+    </select>
+    <button type="submit">Trigger</button>
+</form>
+{% endblock %}
