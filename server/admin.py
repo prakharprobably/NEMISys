@@ -3,6 +3,16 @@ from .auth import protect, withName
 from . import authdbwrapper as authdb
 from . import staffdbwrapper as staffdb
 from . import tokendbwrapper as tokendb
+import json
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CREDS_PATH = os.path.join(BASE_DIR, 'creds.json')
+
+with open(CREDS_PATH, 'r') as f:
+    creds = json.load(f)
+
+events=creds["Events"]
 
 admin= Blueprint('admin', __name__)
 @admin.route('/')
@@ -47,7 +57,7 @@ def insert(UUID):
         flash("something went wrong")
     staffdb.close(staff)
     authdb.close(oauth)
-    return render_template("admin/insert.html")
+    return render_template("admin/insert.html", events=events)
 
 @admin.route('/modify', methods=['GET', 'POST'])
 @protect(['EI', 'TC'])
@@ -86,7 +96,7 @@ def modify(UUID):
         flash("An error occurred during the operation.")
     finally:
         staffdb.close(staff)
-        return render_template("admin/modify.html", oldData=oldData)
+        return render_template("admin/modify.html", oldData=oldData, events=events)
 
 @admin.route('/remove',methods=['GET','POST'])
 @protect(['EI','TC'])

@@ -7,11 +7,17 @@ def create(key):
     from .admin import admin
     from .participantmgr import manage
     from .regatt import regatt
+    from .discauth import discauth
+    from .events import events
+    from .confirm import confirm
     app.register_blueprint(routes, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(admin, url_prefix='/admin/')
     app.register_blueprint(manage, url_prefix='/participants/')
     app.register_blueprint(regatt, url_prefix='/registry/')
+    app.register_blueprint(discauth, url_prefix='/discauth/')
+    app.register_blueprint(events, url_prefix='/events/')
+    app.register_blueprint(confirm, url_prefix='/confirm/')
     for rule in app.url_map.iter_rules():
         print(f"{rule.endpoint}: {rule}")
     return app
