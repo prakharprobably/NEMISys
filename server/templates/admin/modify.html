@@ -24,8 +24,10 @@
 
         <label for="event">Event</label><br/>
         <select id="event" name="event">
-            <option value="pyrathon" {% if oldData and oldData[4] == "pyrathon" %}selected{% endif %}>Pyrathon</option>
-            <option value="all" {% if oldData and oldData[4] == "all" %}selected{% endif %}>All</option>
+            {% for event in events %}
+            <option value="{{event}}">{{event}}</option>
+            {% endfor %}
+            <option value="all">All</option>
         </select><br/>
 
         <label for="permissions">Change Permissions</label>

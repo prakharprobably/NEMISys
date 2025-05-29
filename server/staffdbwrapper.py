@@ -1,7 +1,21 @@
 import psycopg2
+import json
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CREDS_PATH = os.path.join(BASE_DIR, 'creds.json')
+
+with open(CREDS_PATH, 'r') as f:
+    creds = json.load(f)
+
+host=creds["host"]
+dbname=creds["dbname"]
+user=creds["user"]
+password=creds["password"]
+port=creds["port"]
 
 def open():
-    connection = psycopg2.connect(host = "", dbname="technolympics", user="", password="", port = 0000)
+    connection = psycopg2.connect(host=host, dbname=dbname, user=user, password=password, port=port)
     cursor = connection.cursor()
     return (cursor,connection)
 
@@ -73,8 +87,12 @@ def close(conncur):
     conncur[0].close()
     conncur[1].close()
 
-if __name__ == '__main__':
-    cur,conn=open()
-    init(cur=cur)
-    confirm(conn)
-    close((conn,cur))
+if __name__=='__main__':
+    curcon = open()
+    curcon[0].execute("""SELECT * FROM Staff""")
+    print(curcon[0].fetchall())
+    #init(curcon[0])
+    #deleteUser(100121, curcon[0])
+    #insertUser(100120, 'Prakhar Chandra', 12, 'C', 'Pyrathon', '{EI,SI}', curcon[0])
+    #confirm(curcon[1])
+    close(curcon)

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Manage {{ event }}{% endblock %}
+{% block body %}
+<h>{{event}}</h>
+<br/>
+<a href="/events/{{event}}/attendance">Mark Attendance</a>
+<a href="/events/{{event}}/mark/prelims">Mark Prelims</a>
+<a href="/events/{{event}}/mark/finals">Mark Finals</a>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Confirmation Trigger{% endblock %}
+{% block body %}
+<from>
+    <label for="trigger">Select Event</label>
+    <select name="trigger" id="trigger">
+        <option value="revert">Roll Back</option>
+    </select>
+    <button type="submit">Trigger</button>
+</from>
+{% endblock %}

@@ -21,7 +21,9 @@
 
     <label for="event">Event</label><br/>
     <select id="event" name="event">
-        <option value="pyrathon">Pyrathon</option>
+        {% for event in events %}
+        <option value="{{event}}">{{event}}</option>
+        {% endfor %}
         <option value="all">All</option>
     </select><br/>
 
