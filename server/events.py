@@ -20,7 +20,7 @@ def redir(UUID, NAME):
     cur,conn = sdb.open()
     event = sdb.getEvent(cur=cur,uuid=UUID)
     sdb.close(conncur=(conn,cur))
-    return redirect(url_for('events.home', event=uEvent))
+    return redirect(url_for('events.home', event=event))
 
 @events.route('/<event>')
 @protect(['EI','TC', 'SI'])
@@ -29,15 +29,17 @@ def home(UUID, NAME, event):
     cur,conn = sdb.open()
     uEvent = sdb.getEvent(cur=cur,uuid=UUID)
     sdb.close(conncur=(conn,cur))
+    prelds=creds["preldEvents"]
     if uEvent not in (event, 'All'):
         return redirect(url_for('events.home', event=uEvent))
     else:
-        return render_template('/events/events.html', event=uEvent, uuid=UUID, name=NAME)
+        return render_template('/events/events.html', event=uEvent, uuid=UUID, name=NAME, preld= uEvent in prelds)
+        
 
-@events.route('/<event>/attendance')
+@events.route('/<event>/attendance/<round>', methods=['GET','POST'])
 @protect(['EI','TC', 'SI'])
 @withName
-def attendance(UUID, NAME, event):
+def attendance(UUID, NAME, event, round):
     cur,conn = sdb.open()
     uEvent = sdb.getEvent(cur=cur,uuid=UUID)
     sdb.close(conncur=(conn,cur))
@@ -45,25 +47,111 @@ def attendance(UUID, NAME, event):
         pass
     else:
         if uEvent in (event, 'All'):
+            prelds = creds["preldEvents"]
+            if uEvent not in prelds and round == "prelims":
+                return(redirect(f'/events/'))
             if request.method == 'GET':
-                data = evdb.getAttTable(uEvent)
+                data = evdb.getAttTable(uEvent,round)
                 attInd = data[0].index("attendance")
                 print(*data, sep="\n")
                 return render_template('/events/eattendance.html', data=data, uuid=UUID, name=NAME, event=uEvent, attInd=attInd)
             if request.method == 'POST':
                 ecur,econn = evdb.open()
-                data = evdb.getAttTable(uEvent)
+                data = evdb.getAttTable(uEvent, round)
+                print(*data, sep="\n")
                 all_ids = {row[0] for row in data[1:]}
                 checked_ids = {int(key.split('_')[1]) for key in request.form if key.startswith('attendance_')}
-                unchecked_ids = all_ids - unchecked_ids
-            
+                unchecked_ids = all_ids - checked_ids
             for pid in checked_ids:
-                evdb.markAtt(ecur, pid, True)
+                evdb.markAtt(ecur,event, pid, True, round)
             for pid in unchecked_ids:
-                evdb.markAtt(ecur, pid, False)
-            confirm(conn)
-            close((cur,conn))
-            data = evdb.getAttTable(uEvent)
+                evdb.markAtt(ecur,event, pid, False, round)
+            evdb.genRes((ecur,econn),uEvent,round)
+            econn.commit()
+            ecur.close()
+            econn.close()
+            data = evdb.getAttTable(uEvent, round)
             return render_template('/events/eattendance.html', data=data, uuid=UUID, name=NAME, event="uEvent")
+        else:
+            return redirect(url_for(f'/events/'))
+'''
+@events.route('/<event>/grade/<round>', methods=['GET','POST'])
+@protect(['EI','TC', 'SI'])
+@withName
+def grade(UUID, NAME, event, round):
+    pass
+    cur,conn = sdb.open()
+    uEvent = sdb.getEvent(cur=cur,uuid=UUID)
+    sdb.close(conncur=(conn,cur))
+    if uEvent == 'Virtual Warriors':
+        pass
+    else:
+        if uEvent in (event, 'All'):
+            prelds = creds["preldEvents"]
+            if uEvent not in prelds and round == "prelims":
+                return(redirect(f'/events/'))
+            if request.method == 'GET':
+                print('GET')
+                data = evdb.getResTable(uEvent,round)
+                resInd = data[0].index("points")
+                print(*data, sep="\n")
+                return render_template('/events/results.html', data=data, uuid=UUID, name=NAME, event=uEvent, resInd=resInd)
+            if request.method == 'POST':
+                print('POST')
+                ecur,econn = evdb.open()
+                data = evdb.getResTable(uEvent, round)
+                print(request.form)
+                #all_ids = {row[0] for row in data[1:]}
+                #checked_ids = {int(key.split('_')[1]) for key in request.form if key.startswith('attendance_')}
+                #unchecked_ids = all_ids - unchecked_ids
+            #for pid in checked_ids:
+                #evdb.markAtt(ecur, pid, True)
+            #for pid in unchecked_ids:
+                #evdb.markAtt(ecur, pid, False)
+            confirm(conn)
+            if round=="prelims":
+                evdb.genRes(curconn=(cur,conn),event=uEvent, round=round)
+                pass
+            close((cur,conn))
+            data = evdb.getResTable(uEvent, round)
+            return render_template('/events/eattendance.html', data=data, uuid=UUID, name=NAME, event="uEvent")
+        else:
+            return redirect(url_for(f'/events/'))
+'''
+
+
+@events.route('/<event>/grade/<round>', methods=['GET','POST'])
+@protect(['EI','TC', 'SI'])
+@withName
+def grade(UUID, NAME, event, round):
+    cur,conn = sdb.open()
+    uEvent = sdb.getEvent(cur=cur,uuid=UUID)
+    sdb.close(conncur=(conn,cur))
+    if uEvent == 'Virtual Warriors':
+        pass
+    else:
+        if uEvent in (event, 'All'):
+            prelds = creds["preldEvents"]
+            if uEvent not in prelds and round == "prelims":
+                return(redirect(f'/events/'))
+            if request.method == 'GET':
+                data = evdb.getResTable(uEvent,round)
+                resInd = data[0].index("points")
+                print(*data, sep="\n")
+                return render_template('/events/results.html', data=data, uuid=UUID, name=NAME, event=uEvent, resInd=resInd)
+            if request.method == 'POST':
+                ecur,econn = evdb.open()
+                data = evdb.getResTable(uEvent, round)
+                print(*data, sep="\n")
+                print(request.form)
+                for sid in request.form:
+                    evdb.markRes(ecur, event, sid, int(request.form[sid]), round)
+            if round=="prelims":
+                evdb.genAtt((ecur,econn),uEvent,"finals")
+            econn.commit()
+            ecur.close()
+            econn.close()
+            data = evdb.getResTable(uEvent, round)
+            return render_template('/events/results.html', data=data, uuid=UUID, name=NAME, event="uEvent")
         else:
             return redirect(url_for(f'/events/'))

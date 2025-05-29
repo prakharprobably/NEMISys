@@ -3,7 +3,13 @@
 {% block body %}
 <h>{{event}}</h>
 <br/>
-<a href="/events/{{event}}/attendance">Mark Attendance</a>
-<a href="/events/{{event}}/mark/prelims">Mark Prelims</a>
-<a href="/events/{{event}}/mark/finals">Mark Finals</a>
+{% if preld %}
+    <a href="/events/{{event}}/attendance/prelims">Mark Prelims Attendance</a>
+    <a href="/events/{{event}}/attendance/finals">Mark Finals Attendance</a>
+    <a href="/events/{{event}}/grade/prelims">Grade Prelims</a>
+    <a href="/events/{{event}}/grade/finals">Grade Finals</a>
+{% else %}
+    <a href="/events/{{event}}/attendance/finals">Mark Attendance</a>
+    <a href="/events/{{event}}/grade/finals">Grade </a>
+{% endif %}
 {% endblock %}
