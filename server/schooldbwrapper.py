@@ -1,8 +1,21 @@
 import psycopg2
+import json
+import os
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CREDS_PATH = os.path.join(BASE_DIR, 'creds.json')
+
+with open(CREDS_PATH, 'r') as f:
+    creds = json.load(f)
+
+host=creds["host"]
+dbname=creds["dbname"]
+user=creds["user"]
+password=creds["password"]
+port=creds["port"]
 
 def open():
-    connection = psycopg2.connect(host = "", dbname="technolympics", user="", password="", port = 0000)
+    connection = psycopg2.connect(host=host, dbname=dbname, user=user, password=password, port=port)
     cursor = connection.cursor()
     return (cursor,connection)
 
@@ -29,7 +42,7 @@ def insert(cur, sid, subEmail, sName, sAddress, pName, pPhone, sEmail, tName, tP
     cur.execute("""INSERT INTO Schools VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""", (sid, subEmail, sName, sAddress, pName, pPhone, sEmail, tName, tPhone, tEmail))
 
 def getTable():
-    connection = psycopg2.connect(host = "", dbname="technolympics", user="", password="", port = 0000)
+    connection = psycopg2.connect(host=host, dbname=dbname, user=user, password=password, port=port)
     cursor = connection.cursor()
     cursor.execute("""SELECT * FROM Schools""")
     head = [desc[0] for desc in cursor.description]
@@ -46,5 +59,10 @@ def close(curcon):
     curcon[1].close()
 
 if __name__ == '__main__':
-    init()
+    connection = psycopg2.connect(host=host, dbname=dbname, user=user, password=password, port=port)
+    cursor = connection.cursor()
+    cursor.execute("""DELETE FROM Schools""")
+    connection.commit()
+    cursor.close()
+    connection.close()
 

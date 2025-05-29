@@ -1,7 +1,21 @@
 import psycopg2
+import json
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CREDS_PATH = os.path.join(BASE_DIR, 'creds.json')
+
+with open(CREDS_PATH, 'r') as f:
+    creds = json.load(f)
+
+host=creds["host"]
+dbname=creds["dbname"]
+user=creds["user"]
+password=creds["password"]
+port=creds["port"]
 
 def open():
-    connection = psycopg2.connect(host = "", dbname="technolympics", user="", password="", port = 0000)
+    connection = psycopg2.connect(host=host, dbname=dbname, user=user, password=password, port=port)
     cursor = connection.cursor()
     return (cursor,connection)
 
@@ -66,6 +80,7 @@ def close(conncur):
 
 if __name__ == '__main__':
     cur,conn=open()
-    init(cur=cur)
+    cur.execute("""SELECT * FROM Tokens""")
     confirm(conn)
+    print(cur.fetchall())
     close((conn,cur))

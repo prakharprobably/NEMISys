@@ -3,6 +3,7 @@ from werkzeug.utils import secure_filename
 from .auth import protect, withName
 from . import participantdbwrapper as partdb
 from . import schooldbwrapper as schooldb
+from . import discauthdbwrapper as dauth
 from . import exelwrapper as xl
 import os
 
@@ -65,21 +66,40 @@ def upload(UUID):
                     flash(f"Failed to insert school: {e}")
             for participant in participants:
                 try:
-                    cur, con = partdb.open()
-                    partdb.insertParticipant(cur, *participant)
-                    partdb.confirm(con)
-                    partdb.close((cur, con))
-                    print("inserted successfully")
+                    # Unpack all 8 values
+                    pid, name, pclass, event, sid, sname, _, discord = participant
+
+                    # Insert into Participants
+                    cur_p, con_p = partdb.open()
+                    partdb.insertParticipant(cur_p, pid, name, pclass, event, sid, sname, False)
+                    partdb.confirm(con_p)
+                    partdb.close((cur_p, con_p))
+
+                    # Insert Discord username if present
+                    if discord:
+                        try:
+                            cur_d, con_d = dauth.open()
+                            dauth.insert(cur_d, pid, discord)
+                            dauth.confirm(con_d)
+                            dauth.close((cur_d, con_d))
+                            print(f"Inserted Discord for pid {pid}")
+                        except Exception as e:
+                            print(f"Failed to insert Discord auth for pid {pid}: {e}")
+                            flash(f"Failed to insert Discord auth for pid {pid}: {e}")
+
+                    print("inserted participant successfully")
+
                 except Exception as e:
-                    print((f"Failed to insert participant: {e}"))
+                    print(f"Failed to insert participant: {e}")
                     flash(f"Failed to insert participant: {e}")
-            flash("File uploaded and processed successfully.")
             return redirect(url_for('manage.upload'))
         else:
             flash("Invalid file type. Only .xlsx files are accepted.")
             return redirect(request.url)
 
     return render_template('partman/upload.html')
+
+
 
 @manage.route('/modparticipant', methods=['GET', 'POST'])
 @protect(['EI', 'TC'])
