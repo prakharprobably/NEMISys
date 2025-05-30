@@ -108,36 +108,22 @@ def seperateIntoEvents(curconn):
     conn.commit()
     print("SEPERATED")
 
+def seperatePregrads(curconn):
+    cur,conn = curconn
+    onlPrels = creds["pregradPrels"]
+    for event in onlPrels:
+        evdb.genAtt((cur,conn), event=event, round="prelims")
 
 def revert(curconn):
     cur,conn = curconn
-    onsites = creds["onsiteEvents"]
-    for event in onsites:
+    events = creds["Events"]
+    for event in events:
         priatt=sql.Identifier(event+"AttendancePri")
         finatt=sql.Identifier(event+"AttendanceFin")
         prires=sql.Identifier(event+"ResultsPri")
         finres=sql.Identifier(event+"ResultsFin")
         cur.execute(sql.SQL("""DROP TABLE IF EXISTS {priatt}, {finatt},{prires},{finres}""").format(priatt=priatt,prires=prires,finatt=finatt, finres=finres))
         conn.commit()
-    cur.execute(sql.SQL("""DROP TABLE IF EXISTS "Virtual WarriorsAttendance","Virtual WarriorsResultsPri","Virtual WarriorsResultsFin";"""))
-
-def genVirtAtt(curconn):
-    cur,conn = curconn
-    cur.execute("""SELECT name, class, sid, sname INTO "Virtual WarriorsAttendance" FROM Participants WHERE event = 'Virtual Warriors'""")
-    conn.commit()
-
-def genVirtPriRes(curconn):
-    cur,conn=curconn
-    cur.execute("""SELECT sid, sname INTO "Virtual WarriorsResults" FROM Participants WHERE attendance = TRUE""")
-    cur.execute("""ALTER TABLE "Virtual WarriorsResultsPri" ADD COLUMN points INT DEFAULT 0""")
-    conn.commit()
-
-def genVirtFinRes(curconn):
-    cur,conn = curconn
-    limit = creds["limit"]["Virtual Warriors"]
-    cur.execute("""SELECT * INTO "Virtual Warriors ResultsFin" FROM "Virtual WarriorsResultsPri" ORDER BY points LIMIT %s""", (limit,))
-    cur.execute("""UPDATE TABLE "Virtual Warriors ResultsFin" SET points = 0""")
-    conn.commit()
 
 if __name__ == '__main__':
     conn = psycopg2.connect(host=host, dbname=dbname, user=user, password=password, port=port)

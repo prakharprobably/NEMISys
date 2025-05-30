@@ -23,9 +23,13 @@ def open():
 def markAtt(cur, event, pid, attendance, round):
     if round=="finals":
         att=sql.Identifier(event+"AttendanceFin")
-    else:
+    else: #round is prelims
         att=sql.Identifier(event+"AttendancePri")
     cur.execute(sql.SQL("""UPDATE {att} SET attendance=%s WHERE pid = %s""").format(att=att), (attendance, pid))
+    onsites=creds["onsiteEvents"]
+    preprels=creds["pregradPrels"]
+    if (event not in onsites or event in preprels) and round == "prelims":
+        cur.execute("""UPDATE Participants SET attendance=%s WHERE pid = %s""",(attendance, pid))
     print(f"marked {pid} as {attendance}")
 
 def markRes(cur, event, sid, points, round):
@@ -39,10 +43,18 @@ def markRes(cur, event, sid, points, round):
 def genAtt(curconn, event, round):
     cur,conn=curconn
     prelds = creds["preldEvents"]
+    onsites = creds["onsiteEvents"]
+    prePrels = creds["pregradPrels"]
     if round == "prelims":
         if event not in prelds:
             #we want to make a prelims table for a finals only
             pass
+        elif event not in onsites or event in prePrels: #if the round is supposed to be pregraded
+            att=sql.Identifier(event+"AttendancePri")
+            cur.execute(sql.SQL("""CREATE TABLE {att} AS
+                                SELECT pid, name, class, sid, sname FROM Participants 
+                                WHERE event = %s""").format(att=att), (event,))
+            cur.execute(sql.SQL("""ALTER TABLE {att} ADD COLUMN attendance BOOLEAN DEFAULT FALSE""").format(att=att))
         else:
             #prelims table for prelims
             att=sql.Identifier(event+"AttendancePri")
@@ -50,7 +62,7 @@ def genAtt(curconn, event, round):
                                 SELECT pid, name, class, sid, sname FROM Participants 
                                 WHERE event = %s AND attendance = TRUE""").format(att=att), (event,))
             cur.execute(sql.SQL("""ALTER TABLE {att} ADD COLUMN attendance BOOLEAN DEFAULT FALSE""").format(att=att))
-    else:
+    else: #round is finals
         #generate finals table
         fin=sql.Identifier(event+"AttendanceFin")
         if event in prelds: #if event is not finals only
@@ -84,7 +96,7 @@ def genRes(curconn, event, round):
         if event in prelds:
             pri=sql.Identifier(event+"ResultsPri")
             limit = creds["limit"][event]
-            cur.execute(sql.SQL("""SELECT * INTO {fin} FROM {pri} ORDER BY points LIMIT %s""").format(fin=fin, pri=pri), (limit,))
+            cur.execute(sql.SQL("""SELECT * INTO {fin} FROM {pri} ORDER BY points DESC LIMIT %s""").format(fin=fin, pri=pri), (limit,))
         else:
             att=sql.Identifier(event+"AttendanceFin")
             cur.execute(sql.SQL("""SELECT sid, sname INTO {fin} FROM {att}  WHERE attendance = TRUE GROUP BY sid, sname""").format(fin=fin, att=att))
