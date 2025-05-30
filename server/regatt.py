@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template,request,redirect,url_for,flash
 from .auth import protect, withName
-from .participantdbwrapper import getBySchool, markPresent, open, confirm, close
+from .attendancedbwrapper import getBySchool, markPresent, open, confirm, close
 
 regatt = Blueprint('regatt', __name__)
 @regatt.route('/', methods = ['GET','POST'])
