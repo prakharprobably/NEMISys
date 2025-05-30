@@ -25,13 +25,12 @@ def init():
     cur = con.cursor()
     cur.execute("""CREATE TABLE Participants(
         pid INT PRIMARY KEY,
-        name VARCHAR(30),
+        name VARCHAR(50),
         class INT,
         event VARCHAR(20),
         sid CHAR(7),
         sname VARCHAR(100),
-        attendance BOOLEAN,
-        CONSTRAINT sid FORIEGN KEY (sid) REFERENCES Schools(sid)
+        attendance BOOLEAN
     );""")
     con.commit()
     cur.close()
@@ -86,11 +85,9 @@ def modPart(cur, pid, name=None, clss=None, event=None, sid=None):
 
 def markPresent(cur, pid, attendance):
     cur.execute("""UPDATE Participants SET attendance=%s WHERE pid = %s""", (attendance, pid))
-    print(f"marked {pid} as {attendance}")
 
 def confirm(conn):
     conn.commit()
-    print("confirmed changes to participant db")
 
 def close(curcon):
     curcon[0].close()
@@ -122,13 +119,15 @@ def revert(curconn):
         finatt=sql.Identifier(event+"AttendanceFin")
         prires=sql.Identifier(event+"ResultsPri")
         finres=sql.Identifier(event+"ResultsFin")
-        cur.execute(sql.SQL("""DROP TABLE IF EXISTS {priatt}, {finatt},{prires},{finres}""").format(priatt=priatt,prires=prires,finatt=finatt, finres=finres))
+        cur.execute(sql.SQL("""DROP TABLE IF EXISTS {priatt}, {finatt},{prires},{finres}, Attendance, Results""").format(priatt=priatt,prires=prires,finatt=finatt, finres=finres))
         conn.commit()
 
 if __name__ == '__main__':
     conn = psycopg2.connect(host=host, dbname=dbname, user=user, password=password, port=port)
-    cur = con.cursor()
-    cur.execute("""DELETE FROM Participants""")
+    cur = conn.cursor()
+    #cur.execute("""DROP TABLE Participants""")
+    conn.commit()
+    init()
     conn.commit()
     cur.close()
     conn.close()
