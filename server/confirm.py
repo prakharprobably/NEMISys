@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request
 from .auth import protect, withName
-from .participantdbwrapper import open, seperateIntoEvents, close, revert
+from .participantdbwrapper import open, seperateIntoEvents, close, revert, seperatePregrads
+from .attendancedbwrapper import inherit, init
+from . import eventdbwrapper as evdb
 
 confirm = Blueprint('confirm', __name__)
 
@@ -11,12 +13,26 @@ def home(UUID, NAME):
     print(UUID)
     event = request.form.get('trigger')
     print("confirming")
-    if event=='conRegs':
+    if event=='comRegs':
+        init()
+        inherit()
+    elif event=='conRegs':
         cur,conn = open()
         seperateIntoEvents((cur,conn))
+        conn.commit()
         close((cur,conn))
-    elif event=='comVirts':
-        pass
+    elif event=='comVirt':
+        cur,conn = open()
+        evdb.genAtt((cur,conn), event="Virtual Warriors", round="prelims")
+        conn.commit()
+        cur.close()
+        conn.close()
+    elif event=='comOnlP':
+        cur,conn=open()
+        seperatePregrads((cur,conn))
+        conn.commit()
+        cur.close()
+        conn.close()
     elif event=='comRes':
         pass
     print(event)
