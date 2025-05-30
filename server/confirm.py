@@ -3,6 +3,7 @@ from .auth import protect, withName
 from .participantdbwrapper import open, seperateIntoEvents, close, revert, seperatePregrads
 from .attendancedbwrapper import inherit, init
 from . import eventdbwrapper as evdb
+from . import resultsdbwrapper as resdb
 
 confirm = Blueprint('confirm', __name__)
 
@@ -12,7 +13,6 @@ confirm = Blueprint('confirm', __name__)
 def home(UUID, NAME):
     print(UUID)
     event = request.form.get('trigger')
-    print("confirming")
     if event=='comRegs':
         init()
         inherit()
@@ -34,7 +34,7 @@ def home(UUID, NAME):
         cur.close()
         conn.close()
     elif event=='comRes':
-        pass
+        resdb.init()
     print(event)
     return render_template("confirm.html",uuid=UUID, name=NAME)
 
@@ -43,9 +43,9 @@ def home(UUID, NAME):
 @withName
 def rollback(UUID, NAME):
     event = request.form.get('revert')
-    print("rolling back")
     if event=='rollback':
         cur,conn= open()
         revert((cur,conn))
         close((cur,conn))
+    print(event)
     return render_template("confirm.html",uuid=UUID, name=NAME)
