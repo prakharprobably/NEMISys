@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Results{% endblock %}
+{% block body %}
+{% for event in results %}
+    <h2>Finals result for {{event}}</h2>
+    <table>
+        <tr>
+    {% for header in results[event][0] %}
+            <th>{{ header }}</th>
+    {% endfor %}
+        </tr>
+        {% for row in results[event][1:] %}
+        <tr>
+            {% for cell in row %}
+                    <td>{{ cell }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+
+    </table>
+{% endfor %}
+{% endblock %}

@@ -60,7 +60,6 @@ def upload(UUID):
                     schooldb.insert(cur, *school)
                     schooldb.confirm(con)
                     schooldb.close((cur, con))
-                    print("inserted successfully")
                 except Exception as e:
                     print(f"Failed to insert school: {e}")
                     flash(f"Failed to insert school: {e}")
@@ -69,7 +68,7 @@ def upload(UUID):
                     # Unpack all 8 values
                     pid, name, pclass, event, sid, sname, _, discord = participant
 
-                    # Insert into Participants
+                    # printInsert into Participants
                     cur_p, con_p = partdb.open()
                     partdb.insertParticipant(cur_p, pid, name, pclass, event, sid, sname, False)
                     partdb.confirm(con_p)
@@ -82,12 +81,9 @@ def upload(UUID):
                             dauth.insert(cur_d, pid, discord)
                             dauth.confirm(con_d)
                             dauth.close((cur_d, con_d))
-                            print(f"Inserted Discord for pid {pid}")
                         except Exception as e:
                             print(f"Failed to insert Discord auth for pid {pid}: {e}")
                             flash(f"Failed to insert Discord auth for pid {pid}: {e}")
-
-                    print("inserted participant successfully")
 
                 except Exception as e:
                     print(f"Failed to insert participant: {e}")

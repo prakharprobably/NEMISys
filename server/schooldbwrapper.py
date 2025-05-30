@@ -27,10 +27,10 @@ def init():
         sName VARCHAR(50),
         sAddress VARCHAR(255),
         pName VARCHAR(50),
-        pPhone INT,
+        pPhone VARCHAR(15),
         sEmail VARCHAR(320),
         tName VARCHAR(50),
-        tPhone INT,
+        tPhone VARCHAR(15),
         tEmail VARCHAR(320)
     );
     """)
@@ -59,10 +59,12 @@ def close(curcon):
     curcon[1].close()
 
 if __name__ == '__main__':
+    init()
+    '''
     connection = psycopg2.connect(host=host, dbname=dbname, user=user, password=password, port=port)
     cursor = connection.cursor()
     cursor.execute("""DELETE FROM Schools""")
     connection.commit()
     cursor.close()
     connection.close()
-
+'''

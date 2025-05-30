@@ -32,13 +32,13 @@ def genTups(path):
                 header = "pName"
             case "school phone number":
                 header = "sPhone"
-            case "school email address":
+            case "school email":
                 header = "sEmail"
             case "name of teacher incharge":
                 header = "tName"
             case "phone number of teacher incharge":
                 header = "tPhone"
-            case "email-id of teacher incharge":
+            case "email id of teacher incharge":
                 header = "tEmail"
         if header:
             headers[header] = indExl(columnN)
