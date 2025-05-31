@@ -27,12 +27,16 @@ port=creds["port"]
 
 if __name__=='__main__':
     try:
-        conn=psycopg2.connect(host=host, dbname=dbname, user=user, password=password, port=port)
+        #conn=psycopg2.connect(host=host, dbname=dbname, user=user, password=password, port=port)
+        conn=psycopg2.connect("postgresql://nemisys:iBTh7yTO32TJ2mASSHjPcDoNi0GplLDb@dpg-d0tbk8emcj7s73dej0q0-a.singapore-postgres.render.com/pri_nemisys")
         cur=conn.cursor()
+
+        cur.execute("""DROP TABLE IF EXISTS discauth, oauth, Participant, Schools, Staff, Status, Tokens""")
+        conn.commit()
         authdb.init(cur)
         discauthdb.init(cur,conn)
-        participantdb.init()
-        schooldb.init()
+        #participantdb.init()
+        #schooldb.init()
         staffdb.init(cur)
         tokendb.init(cur)
         conn.commit()
