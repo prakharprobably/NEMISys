@@ -1,4 +1,8 @@
 /server/__pycache__
 /creds.json
+/credsRENDER.json
+/credsLOCAL.json
+/credsXATA.json
+/credsAIVEN.json
 /out.json
 /console.py
