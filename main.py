@@ -10,5 +10,6 @@ with open(CREDS_PATH, 'r') as f:
 
 app = create(creds["salt"])
 
-app.run()
 
+port = int(os.environ.get("PORT", 5000))  # fallback for local dev
+app.run(host="0.0.0.0", port=port)
