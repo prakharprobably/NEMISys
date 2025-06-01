@@ -58,8 +58,18 @@ def close(curcon):
     curcon[0].close()
     curcon[1].close()
 
+def getGreatestSid(cur):
+    cur.execute("""SELECT sid FROM Schools ORDER BY sid DESC LIMIT 1;""")
+    sid = cur.fetchone()
+    if sid==None:
+        return 2
+    return int(sid[0][3:6]) - 100
+
 if __name__ == '__main__':
-    init()
+    cur,conn = open()
+    print(getGreatestSid(cur))
+    cur.close()
+    conn.close()
     '''
     connection = psycopg2.connect(host=host, dbname=dbname, user=user, password=password, port=port)
     cursor = connection.cursor()
