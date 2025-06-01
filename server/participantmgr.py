@@ -45,9 +45,14 @@ def upload(UUID):
             filename = secure_filename('upload.xlsx')
             save_path = os.path.join(os.getcwd(), filename)
             file.save(save_path)
+            cur, conn = schooldb.open()
+            pid = partdb.getGreatestPid(cur)
+            sid = schooldb.getGreatestSid(cur)
+            cur.close()
+            conn.close()
             try:
                 print("parsing")
-                schools, participants = xl.genTups(save_path)
+                schools, participants = xl.genTups(save_path, pid, sid)
             except Exception as e:
                 print(f"Error parsing file: {e}")
                 flash(f"Error parsing file: {e}")
