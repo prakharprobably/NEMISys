@@ -8,7 +8,7 @@ def indExl(index):
         index = index // 26 - 1
     return cname
 
-def genTups(path):
+def genTups(path, pid=1000, row=2):
     sheet = load_workbook(path).active
     participants = []
     schools = []
@@ -51,9 +51,6 @@ def genTups(path):
         pHeaders[hName] = indExl(columnN)
         columnN += 1
         cell = indExl(columnN) + "1"
-
-    row = 2
-    pid = 1000
     cell = headers['subEmail'] + str(row)
 
     while sheet[cell].value:

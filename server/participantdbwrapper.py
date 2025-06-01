@@ -2,7 +2,7 @@ import psycopg2
 from psycopg2 import sql
 import json
 import os
-from  . import eventdbwrapper as evdb
+#from  . import eventdbwrapper as evdb
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CREDS_PATH = os.path.join(BASE_DIR, 'creds.json')
 
@@ -122,12 +122,17 @@ def revert(curconn):
         cur.execute(sql.SQL("""DROP TABLE IF EXISTS {priatt}, {finatt},{prires},{finres}, Attendance, Results""").format(priatt=priatt,prires=prires,finatt=finatt, finres=finres))
         conn.commit()
 
+def getGreatestPid(cur):
+    cur.execute("""SELECT pid FROM Participants ORDER BY pid DESC LIMIT 1;""")
+    pid = cur.fetchone()
+    if pid==None:
+        return 1000
+    return pid[0]
+
 if __name__ == '__main__':
     conn = psycopg2.connect(host=host, dbname=dbname, user=user, password=password, port=port)
     cur = conn.cursor()
     #cur.execute("""DROP TABLE Participants""")
-    conn.commit()
-    init()
-    conn.commit()
+    print(getGreatestPid(cur))
     cur.close()
     conn.close()
