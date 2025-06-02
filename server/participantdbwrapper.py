@@ -120,7 +120,7 @@ def revert(curconn):
         prires=sql.Identifier(event+"ResultsPri")
         finres=sql.Identifier(event+"ResultsFin")
         wins = sql.Identifier(event+"Winners")
-        cur.execute(sql.SQL("""DROP TABLE IF EXISTS {priatt}, {finatt},{prires},{finres}, {wins}, Attendance, Results""").format(priatt=priatt,prires=prires,finatt=finatt, finres=finres, wins = wins))
+        cur.execute(sql.SQL("""DROP TABLE IF EXISTS {priatt}, {finatt},{prires},{finres}, {wins}, Attendance, Results, MeritCerts, AppCerts, PartCerts""").format(priatt=priatt,prires=prires,finatt=finatt, finres=finres, wins = wins))
         conn.commit()
 
 def getGreatestPid(cur):
