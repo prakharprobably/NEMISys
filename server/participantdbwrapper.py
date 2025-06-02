@@ -2,7 +2,7 @@ import psycopg2
 from psycopg2 import sql
 import json
 import os
-#from  . import eventdbwrapper as evdb
+from  . import eventdbwrapper as evdb
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CREDS_PATH = os.path.join(BASE_DIR, 'creds.json')
 
@@ -28,7 +28,7 @@ def init():
         name VARCHAR(50),
         class INT,
         event VARCHAR(20),
-        sid CHAR(7),
+        sid CHAR(6),
         sname VARCHAR(100),
         attendance BOOLEAN
     );""")
@@ -119,7 +119,8 @@ def revert(curconn):
         finatt=sql.Identifier(event+"AttendanceFin")
         prires=sql.Identifier(event+"ResultsPri")
         finres=sql.Identifier(event+"ResultsFin")
-        cur.execute(sql.SQL("""DROP TABLE IF EXISTS {priatt}, {finatt},{prires},{finres}, Attendance, Results""").format(priatt=priatt,prires=prires,finatt=finatt, finres=finres))
+        wins = sql.Identifier(event+"Winners")
+        cur.execute(sql.SQL("""DROP TABLE IF EXISTS {priatt}, {finatt},{prires},{finres}, {wins}, Attendance, Results, MeritCerts, AppCerts, PartCerts""").format(priatt=priatt,prires=prires,finatt=finatt, finres=finres, wins = wins))
         conn.commit()
 
 def getGreatestPid(cur):
@@ -132,7 +133,9 @@ def getGreatestPid(cur):
 if __name__ == '__main__':
     conn = psycopg2.connect(host=host, dbname=dbname, user=user, password=password, port=port)
     cur = conn.cursor()
-    #cur.execute("""DROP TABLE Participants""")
-    print(getGreatestPid(cur))
+    cur.execute("""DROP TABLE Participants""")
+    conn.commit()
+    init()
+    #print(getGreatestPid(cur))
     cur.close()
     conn.close()

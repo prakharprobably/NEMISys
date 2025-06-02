@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Results{% endblock %}
+{% block body %}
+<h1>Certificate Data</h1>
+<h2>Merit Certificates</h2>
+{% for event in parts %}
+    <h3>{{event}}</h3>
+    <table>
+        <tr>
+    {% for header in merits[event][0] %}
+            <th>{{ header }}</th>
+    {% endfor %}
+        </tr>
+        {% for row in merits[event][1:] %}
+        <tr>
+            {% for cell in row %}
+                    <td>{{ cell }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+
+    </table>
+{% endfor %}
+<h2>Participation Certificates</h2>
+{% for event in parts %}
+    <h3>{{event}}</h3>
+    <table>
+        <tr>
+    {% for header in parts[event][0] %}
+            <th>{{ header }}</th>
+    {% endfor %}
+        </tr>
+        {% for row in parts[event][1:] %}
+        <tr>
+            {% for cell in row %}
+                    <td>{{ cell }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+
+    </table>
+{% endfor %}
+<h2>Appreciation Certificates</h2>
+    <table>
+        <tr>
+    {% for header in apps[0] %}
+            <th>{{ header }}</th>
+    {% endfor %}
+        </tr>
+        {% for staff in apps[1:] %}
+        <tr>
+            {% for cell in staff %}
+                    <td>{{ cell }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

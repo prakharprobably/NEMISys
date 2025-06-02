@@ -15,5 +15,11 @@
             <hr/>
         {% endif %}
     {% block body %}BODY{% endblock %}
+    {% if uuid%}
+    <footer>
+        <p>Made with ❤️ by <a href="/about">InfoTech</a> @ <a href="https://noida.cambridgeschool.edu.in/">Cambridge School, Noida</a></br>
+        <small>Running with pride on <a href="https://archlinux.org/">Arch</a>, btw</small></p>
+    </footer>
+    {% endif %}
     </body>
 </html>

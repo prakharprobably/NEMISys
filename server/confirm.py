@@ -4,6 +4,7 @@ from .participantdbwrapper import open, seperateIntoEvents, close, revert, seper
 from .attendancedbwrapper import inherit, init
 from . import eventdbwrapper as evdb
 from . import resultsdbwrapper as resdb
+from . import certsdbwrapper as certdb
 
 confirm = Blueprint('confirm', __name__)
 
@@ -35,6 +36,10 @@ def home(UUID, NAME):
         conn.close()
     elif event=='comRes':
         resdb.init()
+    elif event=='conRes':
+        certdb.genMerits()
+        certdb.genParts()
+        certdb.genAppr()
     print(event)
     return render_template("confirm.html",uuid=UUID, name=NAME)
 
