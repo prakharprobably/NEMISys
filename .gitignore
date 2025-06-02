@@ -1,4 +1,5 @@
 /server/__pycache__
+/server/static/PRIVATE/
 /creds.json
 /credsRENDER.json
 /credsLOCAL.json

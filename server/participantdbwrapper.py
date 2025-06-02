@@ -2,7 +2,7 @@ import psycopg2
 from psycopg2 import sql
 import json
 import os
-#from  . import eventdbwrapper as evdb
+from  . import eventdbwrapper as evdb
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CREDS_PATH = os.path.join(BASE_DIR, 'creds.json')
 
@@ -119,7 +119,8 @@ def revert(curconn):
         finatt=sql.Identifier(event+"AttendanceFin")
         prires=sql.Identifier(event+"ResultsPri")
         finres=sql.Identifier(event+"ResultsFin")
-        cur.execute(sql.SQL("""DROP TABLE IF EXISTS {priatt}, {finatt},{prires},{finres}, Attendance, Results""").format(priatt=priatt,prires=prires,finatt=finatt, finres=finres))
+        wins = sql.Identifier(event+"Winners")
+        cur.execute(sql.SQL("""DROP TABLE IF EXISTS {priatt}, {finatt},{prires},{finres}, {wins}, Attendance, Results""").format(priatt=priatt,prires=prires,finatt=finatt, finres=finres, wins = wins))
         conn.commit()
 
 def getGreatestPid(cur):

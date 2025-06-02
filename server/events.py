@@ -85,19 +85,21 @@ def grade(UUID, NAME, event, round):
         if uEvent not in prelds and round == "prelims":
             return(redirect(f'/events/'))
         if request.method == 'GET':
-            data = evdb.getResTable(uEvent,round)
+            data = evdb.getResTable(event,round)
             resInd = data[0].index("points")
             print(*data, sep="\n")
             return render_template('/events/results.html', data=data, uuid=UUID, name=NAME, event=uEvent, resInd=resInd)
         if request.method == 'POST':
             ecur,econn = evdb.open()
-            data = evdb.getResTable(uEvent, round)
+            data = evdb.getResTable(event, round)
             print(*data, sep="\n")
             print(request.form)
             for sid in request.form:
                 evdb.markRes(ecur, event, sid, int(request.form[sid]), round)
         if round=="prelims":
-            evdb.genAtt((ecur,econn),uEvent,"finals")
+            evdb.genAtt((ecur,econn),event,"finals")
+        else:
+            evdb.genWinTable(ecur, event)
         econn.commit()
         ecur.close()
         econn.close()

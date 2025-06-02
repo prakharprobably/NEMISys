@@ -11,6 +11,7 @@ def create(key):
     from .events import events
     from .confirm import confirm
     from .results import results
+    from .about import about
     app.register_blueprint(routes, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(admin, url_prefix='/admin/')
@@ -20,6 +21,7 @@ def create(key):
     app.register_blueprint(events, url_prefix='/events/')
     app.register_blueprint(confirm, url_prefix='/confirm/')
     app.register_blueprint(results, url_prefix='/results/')
+    app.register_blueprint(about, url_prefix='/about/')
     for rule in app.url_map.iter_rules():
         print(f"{rule.endpoint}: {rule}")
     return app

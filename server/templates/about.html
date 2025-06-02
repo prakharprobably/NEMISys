@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}About NEMISys{% endblock %}
+{% block body %}
+<h1>about://NEMISys</h1>
+<p>
+    NEMISys stands for <u>N</u>etwroked <u>E</u>vent <u>M</u>anagement and <u>I</u>ntegration <u>S</u>ystem </br>
+    It is an event management solution developed in house by the InfoTech department @ Cambridge School, Noida, with a host of automation features that made organizing TechnOlympics <sub>2.0.25</sub> a breeze </br>
+    Some of these are-
+    <ol>
+        <li>Automatically sorting the Google forms response spreadsheet into participant wise tables and adding them to a centralised database</li>
+        <li>Providing an API endpoint for integration with the TechnoBot discord bot for fetching userdata, and the website for publishing results automatically</li>
+        <li>Making a single centralised database to reduce manual labour required when managing with pen and paper</li>
+        <li>Providing a simple and intuitive UI to interact with said centralised database</li>
+        <li>An account system based on the PoLP, with token based authentication, and selfhosted role protected resources to prevent internal sabotages</li>
+        <li>Providing a simple interface for updating registration attendance, and generating eventwise attendance tables from it</li>
+        <li>Providing Event Incharges with a single interface to mark attendance and results of their respective events</li>
+        <li>Compiling results into a single overall table automatically upon conclusion of all events</li>
+        <li>Immidietly emailing the results in the form of a spreadsheet to a mailing list</li>
+        <li>Providing a simple interface to fetch the counts of the number of refreshments required</li>
+        <li>Providing a simple interface for the Certification team to write all certificates with all the neccessary data</li>
+        <li>Minimizing the need for eventheads having to manually run around and manage the event by compiling all the neccessary tools in one place</li>
+        <li>Accounting for events with preliminaries before the complete festival, and updating the participant attendance from that interface, which doesn't have an affect on the refreshment orders as that is a seperate table</li>
+    </ol>
+    <div>
+    <style>
+    .developer-container {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        margin-bottom: 2em;
+    }
+
+    .developer-image {
+        width: 125px;
+        height: 125px;
+        border-radius: 62.5px;
+        object-fit: cover;
+    }
+
+    .developer-info {
+        flex: 1;
+    }
+
+    .developer-info h3 {
+        margin-top: 0;
+        margin-bottom: 5px;
+    }
+
+    .developer-info ul {
+        margin-top: 0;
+        padding-left: 20px;
+    }
+
+    .github-link {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .github-link img {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+    }
+
+    @media screen and (max-width: 600px) {
+        .developer-container {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .developer-info {
+            text-align: left;
+        }
+    }
+    </style>
+
+    <h2>Developed by</h2>
+
+    <div class="developer-container">
+        <img src="{{ url_for('static', filename='PRIVATE/prakhar.jpg') }}" alt="Prakhar Chandra" class="developer-image" />
+        <div class="developer-info">
+            <h3>Prakhar Chandra</h3>
+            <ul>
+                <li>Wrote the backend</li>
+                <li>Handled the deployment and webpage rendering</li>
+            </ul>
+            <a href="https://github.com/prakharprobably" class="github-link" target="_blank">
+                <img src="{{ url_for('static', filename='images/githublogo.png') }}" alt="GitHub Logo" />
+                <span>Go to GitHub</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="developer-container">
+        <img src="{{ url_for('static', filename='PRIVATE/kshitij.jpg') }}" alt="Kshitij Gupta" class="developer-image" />
+        <div class="developer-info">
+            <h3>Kshitij Gupta</h3>
+            <ul>
+                <li>Wrote the stylesheets</li>
+                <li>Handled the webpage structure and element placement</li>
+            </ul>
+            <a href="https://github.com/Kshitij123011" class="github-link" target="_blank">
+                <img src="{{ url_for('static', filename='images/githublogo.png') }}" alt="GitHub Logo" />
+                <span>Go to GitHub</span>
+            </a>
+        </div>
+    </div>
+</p>
+{% endblock %}

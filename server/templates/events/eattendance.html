@@ -2,35 +2,73 @@
 {% block title %}{{ event }} Attendance{% endblock %}
 {% block body %}
 <h2>Mark Attendance for {{ event }}</h2>
-<form method="POST">
-    <table>
-        <tr>
-    {% for header in data[0] %}
-        {% set i = loop.index0 %}
-        {% if i == attInd %}
-            <th>Present</th>
-        {% else %}
-            <th>{{ header }}</th>
-        {% endif %}
-    {% endfor %}
-        </tr>
-        {% for row in data[1:] %}
-        <tr>
-            {% for cell in row %}
-                {% set i = loop.index0 %}
-                {% if i == attInd %}
-                    <td>
-                        <input type="checkbox" name="attendance_{{ row[0] }}" {% if cell %}checked{% endif %}>
-                        <input type="hidden" name="unchecked_ids" value="{{ row[0] }}" {% if cell %}disabled{% endif %}>
-                    </td>
-                {% else %}
-                    <td>{{ cell }}</td>
-                {% endif %}
-            {% endfor %}
-        </tr>
-        {% endfor %}
+<style>
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 
-    </table>
+    table {
+        width: max-content;
+        min-width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+        white-space: nowrap; /* Important for horizontal scrolling */
+    }
+
+    input[type="checkbox"] {
+        transform: scale(1.2);
+        margin: 4px;
+    }
+
+    input[type="submit"] {
+        margin-top: 16px;
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+</style>
+
+<h2>Mark Attendance for {{ event }}</h2>
+<form method="POST">
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    {% for header in data[0] %}
+                        {% set i = loop.index0 %}
+                        {% if i == attInd %}
+                            <th>Present</th>
+                        {% else %}
+                            <th>{{ header }}</th>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data[1:] %}
+                    <tr>
+                        {% for cell in row %}
+                            {% set i = loop.index0 %}
+                            {% if i == attInd %}
+                                <td>
+                                    <input type="checkbox" name="attendance_{{ row[0] }}" {% if cell %}checked{% endif %}>
+                                    <input type="hidden" name="unchecked_ids" value="{{ row[0] }}" {% if cell %}disabled{% endif %}>
+                                </td>
+                            {% else %}
+                                <td>{{ cell }}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <input type="submit" value="Update Attendance">
 </form>
 {% endblock %}
