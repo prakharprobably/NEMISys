@@ -2,7 +2,39 @@
 {% block title %}{{ event }} {% endblock %}
 {% block body %}
 <h2>Grade Results for {{ event }}</h2>
+<style>
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        width: max-content;
+        min-width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+        white-space: nowrap; /* Important for horizontal scrolling */
+    }
+
+    input[type="checkbox"] {
+        transform: scale(1.2);
+        margin: 4px;
+    }
+
+    input[type="submit"] {
+        margin-top: 16px;
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+</style>
 <form method="POST">
+    <div class="table-wrapper">
     <table>
         <tr>
     {% for header in data[0] %}
@@ -30,6 +62,7 @@
         {% endfor %}
 
     </table>
+    </div>
     <input type="submit" value="Update Attendance">
 </form>
 {% endblock %}

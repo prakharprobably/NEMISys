@@ -95,10 +95,12 @@ def genRes(curconn, event, round):
             pri=sql.Identifier(event+"ResultsPri")
             limit = creds["limit"][event]
             cur.execute(sql.SQL("""SELECT * INTO {fin} FROM {pri} ORDER BY points DESC LIMIT %s""").format(fin=fin, pri=pri), (limit,))
+            cur.execute(sql.SQL("""ALTER TABLE {fin} ADD COLUMN pref BOOL DEFAULT FALSE""").format(fin=fin))
         else:
             att=sql.Identifier(event+"AttendanceFin")
             cur.execute(sql.SQL("""SELECT sid, sname INTO {fin} FROM {att}  WHERE attendance = TRUE GROUP BY sid, sname""").format(fin=fin, att=att))
             cur.execute(sql.SQL("""ALTER TABLE {fin} ADD COLUMN points INT DEFAULT 0""").format(fin=fin))
+            cur.execute(sql.SQL("""ALTER TABLE {fin} ADD COLUMN pref BOOL DEFAULT FALSE""").format(fin=fin))
         cur.execute(sql.SQL("""UPDATE {fin} SET points=0""").format(fin=fin))
 
 def getAttTable(event, round):
@@ -107,11 +109,19 @@ def getAttTable(event, round):
         att=sql.Identifier(event+"AttendanceFin")
     else:
         att=sql.Identifier(event+"AttendancePri")
-    cur.execute(sql.SQL("""SELECT * FROM {att}""").format(att=att))
+    cur.execute(sql.SQL("""SELECT pid, name, class, attendance, sname, sid FROM {att}""").format(att=att))
     head = [desc[0] for desc in cur.description]
     data = [head]+list(cur.fetchall())
     close((cur,conn))
     return data
+
+def genWinTable(cur, event):
+    win = sql.Identifier(event + "Winners")
+    res = sql.Identifier(event+"ResultsFin")
+    cur.execute(sql.SQL("DROP TABLE IF EXISTS {}").format(win))
+    cur.execute(sql.SQL("""CREATE TABLE {win} AS
+        SELECT RANK() OVER (ORDER BY points DESC, pref DESC) AS rank, * FROM {res}
+        ORDER BY points DESC, pref DESC""").format(win=win, res=res))
 
 def getResTable(event, round):
     cur, conn = open()
