@@ -67,7 +67,9 @@ def getGreatestSid(cur):
 
 if __name__ == '__main__':
     cur,conn = open()
-    print(getGreatestSid(cur))
+    cur.execute("""DROP TABLE Schools""")
+    conn.commit()
+    init()
     cur.close()
     conn.close()
     '''

@@ -37,7 +37,7 @@ def getMacRes(event):
 def getWinners(event):
     cur,conn = open()
     win = sql.Identifier(event+"Winners")
-    cur.execute(sql.SQL("""SELECT * FROM {wins} ORDER BY rank DESC LIMIT 3""").format(wins=win))
+    cur.execute(sql.SQL("""SELECT * FROM {wins} ORDER BY rank LIMIT 3""").format(wins=win))
     res = cur.fetchall()
     close((cur,conn))
     return res
@@ -62,14 +62,17 @@ def init():
             cur.execute("""UPDATE Results SET points = points + %s WHERE sid = %s""", (points, sid))
         rows = getWinners(event=event)
         for row in rows:
-            rank = row[0]
-            sid = row[1]
+            rank = int(row[0])
+            sid = row[1].rstrip()
             if rank == 1:
                 cur.execute("""UPDATE Results SET firsts = firsts + 1 WHERE sid = %s""", (sid,))
+                conn.commit()
             if rank == 2:
                 cur.execute("""UPDATE Results SET "seconds" = "seconds" + 1 WHERE sid = %s""", (sid,))
+                conn.commit()
             if rank == 3:
                 cur.execute("""UPDATE Results SET thirds = thirds + 1 WHERE sid = %s""", (sid,))
+                conn.commit()
             
     conn.commit()
     close((cur,conn))
@@ -82,18 +85,29 @@ def getEventRes(event, round="finals"):
     else:
         res=sql.Identifier(event+"ResultsPri")
         cur.execute(sql.SQL("""SELECT * FROM {res} ORDER BY points DESC""").format(res=res))
-    res=cur.fetchall()
+    head = [desc[0] for desc in cur.description]
+    data = [head] + list(cur.fetchall())
+    close((cur,conn))
+    return data
     close((cur,conn))
     return res
 
 def getOverallRes():
     cur,conn = open()
     cur.execute("""SELECT * FROM Results ORDER BY points DESC, firsts DESC, "seconds" DESC, thirds DESC""")
-    res = cur.fetchall()
+    head = [desc[0] for desc in cur.description]
+    data = [head] + list(cur.fetchall())
+    close((cur,conn))
+    return data
     close((cur,conn))
     return res
 
 def getOverallWinners():
     cur,conn = open()
     cur.execute(sql.SQL("""SELECT sid, sname FROM Results ORDER BY points DESC, firsts DESC, "seconds" DESC, thirds DESC LIMIT 3"""))
+    head = [desc[0] for desc in cur.description]
+    data = [head] + list(cur.fetchall())
     close((cur,conn))
+    return data
+    close((cur,conn))
+    return res

@@ -28,7 +28,7 @@ def init():
         name VARCHAR(50),
         class INT,
         event VARCHAR(20),
-        sid CHAR(7),
+        sid CHAR(6),
         sname VARCHAR(100),
         attendance BOOLEAN
     );""")
@@ -133,7 +133,9 @@ def getGreatestPid(cur):
 if __name__ == '__main__':
     conn = psycopg2.connect(host=host, dbname=dbname, user=user, password=password, port=port)
     cur = conn.cursor()
-    #cur.execute("""DROP TABLE Participants""")
-    print(getGreatestPid(cur))
+    cur.execute("""DROP TABLE Participants""")
+    conn.commit()
+    init()
+    #print(getGreatestPid(cur))
     cur.close()
     conn.close()
