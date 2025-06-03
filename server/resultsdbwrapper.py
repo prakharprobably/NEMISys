@@ -115,7 +115,7 @@ def getOverallWinners():
 def getWinningParts(event):
     cur, conn = open()
     win = sql.Identifier(event + "Winners")
-    cur.execute(sql.SQL("SELECT rank, sname, sid FROM {} ORDER BY rank LIMIT 3").format(win))
+    cur.execute(sql.SQL("SELECT rank, sname, sid FROM {win} ORDER BY rank LIMIT 3").format(win=win))
     winners = cur.fetchall()
     out = {}
     data = {}
@@ -125,9 +125,9 @@ def getWinningParts(event):
             cur.execute(sql.SQL("""
                 SELECT name, class
                 FROM participants p
-                JOIN {} AS w ON p.sid = w.sid
+                JOIN {win} AS w ON p.sid = w.sid
                 WHERE p.event = %s AND p.attendance = TRUE AND w.sid = %s
-            """).format(win), (event, sid))
+            """).format(win=win), (event, sid))
             participants = cur.fetchall()
             part_list = [{"name": name, "class": clss} for name, clss in participants]
             data[rank] = {"name": sname, "participants": part_list}
@@ -138,3 +138,30 @@ def getWinningParts(event):
         return {}
     finally:
         close((cur,conn))
+
+def getQualifyingParts(event):
+    cur, conn = open()
+    try:
+        res_table = sql.Identifier(f"{event}ResultsPri")
+        cur.execute(sql.SQL("SELECT sname, sid FROM {} ORDER BY points LIMIT 6").format(res_table))
+        qualifiers = cur.fetchall()
+        out = {}
+        data = []
+        for sname, sid in qualifiers:
+            cur.execute(sql.SQL("""
+                SELECT p.name, p.class FROM participants p
+                JOIN (
+                    SELECT sid FROM {res} ORDER BY points LIMIT 6
+                ) AS res ON p.sid = res.sid
+                WHERE p.event = %s AND p.attendance = TRUE AND res.sid = %s
+            """).format(res=res_table), (event, sid))
+            participants = cur.fetchall()
+            part_list = [{"name": name, "class": clss} for name, clss in participants]
+            data.append({"name": sname, "participants": part_list})
+        out[event] = data
+        return out
+    except Exception as e:
+        print(f"Error in getQualifyingParts: {e}")
+        return {}
+    finally:
+        close((cur, conn))
