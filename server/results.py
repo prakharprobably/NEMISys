@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 from .auth import protect, withName
 from . import resultsdbwrapper as resdb
 import json
@@ -23,3 +23,20 @@ def home(UUID, NAME):
         results[event] = resdb.getEventRes(event=event, round="finals")
     resdb.close((cur,conn))
     return render_template("results.html", results = results)
+
+@results.route('/api')
+def getRes():
+    '''
+    APIKey = request.cookies.get("APIKey")
+    if APIKey not in allowedKeys:
+        return jsonify({}), 401'''
+    curconn=resdb.open()
+    data = {}
+    resdb.close(curconn=curconn)
+    events = creds["Events"]
+    for event in events:
+        data.update(resdb.getWinningParts(event))
+    if not data:
+        return jsonify({}),404
+    else:
+        return jsonify(data),200

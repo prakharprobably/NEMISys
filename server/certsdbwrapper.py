@@ -31,19 +31,17 @@ def genMerits():
     events = creds["Events"]
     cur.execute("""DROP TABLE IF EXISTS MeritCerts""")
     conn.commit()
-    cur.execute("""CREATE TABLE MeritCerts (pid INT, name VARCHAR(50), class INT, event VARCHAR(20), sname VARCHAR(100), sAddress VARCHAR(255))""")
+    cur.execute("""CREATE TABLE MeritCerts (pid INT, rank INT, name VARCHAR(50), class INT, event VARCHAR(20), sname VARCHAR(100), sAddress VARCHAR(255))""")
     conn.commit()
     for event in events:
         win = sql.Identifier(event + "Winners")
         cur.execute(sql.SQL("""
-            INSERT INTO MeritCerts (pid, name, class, event, sname, sAddress)
-            SELECT p.pid, p.name, p.class, p.event, p.sName, s.sAddress
+            INSERT INTO MeritCerts (pid, rank, name, class, event, sname, sAddress)
+            SELECT p.pid, w.rank, p.name, p.class, p.event, p.sName, s.sAddress
             FROM participants p
             JOIN schools s ON p.sid = s.sid
-            WHERE p.event = %s AND p.sid IN (
-                SELECT sid FROM {win} ORDER BY rank LIMIT 3
-            )
-        """).format(win=win), (event,))
+            JOIN {win} AS w ON p.sid = w.sid
+            WHERE p.event = %s AND p.attendance = TRUE AND w.rank <= 3""").format(win=win), (event,))
     conn.commit()
     close((cur,conn))
 
@@ -60,10 +58,8 @@ def genParts():
             SELECT p.pid, p.name, p.class, p.event, p.sName, s.sAddress
             FROM participants p
             JOIN schools s ON p.sid = s.sid
-            WHERE p.event = %s AND p.sid NOT IN (
-                SELECT sid FROM {win} ORDER BY rank LIMIT 3
-            )
-        """).format(win=win), (event,))
+            WHERE p.event = %s AND p.attendance = TRUE AND p.sid NOT IN (
+            SELECT sid FROM {win} ORDER BY rank LIMIT 3)""").format(win=win), (event,))
     conn.commit()
     close((cur,conn))
 
