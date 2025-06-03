@@ -41,7 +41,7 @@ def genMerits():
             FROM participants p
             JOIN schools s ON p.sid = s.sid
             JOIN {win} AS w ON p.sid = w.sid
-            WHERE p.event = %s AND w.rank <= 3)""").format(win=win), (event,))
+            WHERE p.event = %s AND p.attendance = TRUE AND w.rank <= 3""").format(win=win), (event,))
     conn.commit()
     close((cur,conn))
 
@@ -58,7 +58,7 @@ def genParts():
             SELECT p.pid, p.name, p.class, p.event, p.sName, s.sAddress
             FROM participants p
             JOIN schools s ON p.sid = s.sid
-            WHERE p.event = %s AND p.sid NOT IN (
+            WHERE p.event = %s AND AND p.attendance = TRUE p.sid NOT IN (
             SELECT sid FROM {win} ORDER BY rank LIMIT 3)""").format(win=win), (event,))
     conn.commit()
     close((cur,conn))
