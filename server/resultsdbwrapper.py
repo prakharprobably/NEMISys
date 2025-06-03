@@ -73,7 +73,6 @@ def init():
             if rank == 3:
                 cur.execute("""UPDATE Results SET thirds = thirds + 1 WHERE sid = %s""", (sid,))
                 conn.commit()
-            
     conn.commit()
     close((cur,conn))
 
@@ -111,3 +110,31 @@ def getOverallWinners():
     return data
     close((cur,conn))
     return res
+
+
+def getWinningParts(event):
+    cur, conn = open()
+    win = sql.Identifier(event + "Winners")
+    cur.execute(sql.SQL("SELECT rank, sname, sid FROM {} ORDER BY rank LIMIT 3").format(win))
+    winners = cur.fetchall()
+    out = {}
+    data = {}
+    try:
+        for winner in winners:
+            rank, sname, sid = winner
+            cur.execute(sql.SQL("""
+                SELECT name, class
+                FROM participants p
+                JOIN {} AS w ON p.sid = w.sid
+                WHERE p.event = %s AND p.attendance = TRUE AND w.sid = %s
+            """).format(win), (event, sid))
+            participants = cur.fetchall()
+            part_list = [{"name": name, "class": clss} for name, clss in participants]
+            data[rank] = {"name": sname, "participants": part_list}
+            print(event, rank, sname, part_list)
+        out[event] = data
+        return out
+    except:
+        return {}
+    finally:
+        close((cur,conn))
