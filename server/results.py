@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify
 from .auth import protect, withName
 from . import resultsdbwrapper as resdb
+from . import statusdbwrapper as statusdb
 import json
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

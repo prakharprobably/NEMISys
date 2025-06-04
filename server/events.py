@@ -2,6 +2,7 @@ from flask import Blueprint, render_template,request,redirect,url_for,flash
 from . import staffdbwrapper as sdb
 from . import eventdbwrapper as evdb
 from .auth import protect, withName
+from . import statusdbwrapper as statusdb
 import json
 import os
 
@@ -63,6 +64,10 @@ def attendance(UUID, NAME, event, round):
             evdb.markAtt(ecur,event, pid, True, round)
         for pid in unchecked_ids:
             evdb.markAtt(ecur,event, pid, False, round)
+        if round == "prelims":
+            statusdb.setStatus((ecur,econn), event=event, status=2)
+        else:
+            statusdb.setStatus((ecur,econn), event=event, status=4)
         evdb.genRes((ecur,econn),uEvent,round)
         econn.commit()
         ecur.close()
@@ -98,8 +103,10 @@ def grade(UUID, NAME, event, round):
                 evdb.markRes(ecur, event, sid, int(request.form[sid]), round)
         if round=="prelims":
             evdb.genAtt((ecur,econn),event,"finals")
+            statusdb.setStatus((ecur,econn), event, status=3)
         else:
             evdb.genWinTable(ecur, event)
+            statusdb.setStatus((ecur,econn), event, status=5)
         econn.commit()
         ecur.close()
         econn.close()
