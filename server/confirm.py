@@ -5,6 +5,7 @@ from .attendancedbwrapper import inherit, init
 from . import eventdbwrapper as evdb
 from . import resultsdbwrapper as resdb
 from . import certsdbwrapper as certdb
+from . import statusdbwrapper as statusdb
 
 confirm = Blueprint('confirm', __name__)
 
