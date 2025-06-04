@@ -46,8 +46,8 @@ def getRes():
 def getFinRes():
     allowedKeys = creds["APIKeys"]
     APIKey = request.cookies.get("APIKey")
-    '''if APIKey not in allowedKeys:
-        return jsonify({}), 401'''
+    if APIKey not in allowedKeys:
+        return jsonify({}), 401
     curconn=resdb.open()
     data = {}
     resdb.close(curconn=curconn)
@@ -63,9 +63,8 @@ def getFinRes():
 def getPriRes():
     allowedKeys = creds["APIKeys"]
     APIKey = request.cookies.get("APIKey")
-    '''
     if APIKey not in allowedKeys:
-        return jsonify({}), 401'''
+        return jsonify({}), 401
     curconn=resdb.open()
     data = {}
     resdb.close(curconn=curconn)
