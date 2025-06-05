@@ -52,8 +52,13 @@
                 {% set i = loop.index0 %}
                 {% if i == resInd %}
                     <td>
-                        <input type="text" id="{{ row[0] }}" name="{{ row[0] }}" value="{{cell}}">
+                        <input type="text" id="{{ row[0] }}_points" name="{{ row[0] }}_points" value="{{cell}}">
                     </td>
+                {% elif i == resInd + 1 %}
+                        <td>
+                            <input type="hidden" name="{{ row[0] }}_pref" value="0">
+                            <input type="checkbox" name="{{ row[0] }}_pref" value="1" {% if cell %}checked{% endif %}>
+                        </td>
                 {% else %}
                     <td>{{ cell }}</td>
                 {% endif %}

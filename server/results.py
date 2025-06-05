@@ -43,14 +43,7 @@ def home(UUID, NAME):
             data = evdb.getResTable(event, "finals")
             resInd = data[0].index("points")
             results[event] = data
-        return render_template(
-            '/modres.html',
-            results=results,
-            uuid=UUID,
-            name=NAME,
-            resInd=resInd
-        )
-
+        return render_template('/modres.html', results=results, uuid=UUID, name=NAME, resInd=resInd)
     elif request.method == 'POST':
         ecur, econn = evdb.open()
         markBuf = {}
@@ -72,22 +65,24 @@ def home(UUID, NAME):
                     resdb.setSeconds(sid, val)
                 elif field == "thirds":
                     resdb.setThirds(sid, val)
+        print(*{f"{key}:{request.form[key]}" for key in request.form if key.endswith('_pref')}, sep='\n')
         for event in events:
             data = evdb.getResTable(event, "finals")[1:]  # Skip header
-            all_ids = {row[0] for row in data[1:]}
+            all_ids = {row[0] for row in data[0:]}
             checked_ids = {
                 key.rsplit('_', 2)[1]
                 for key in request.form
-                if key.endswith("_pref") and request.form[key] == "1"
-            }
+                if key.endswith("_pref") and key.startswith(event) and '1' in request.form.getlist(key)}
+            print(checked_ids)
             unchecked_ids = all_ids - checked_ids
+            print(unchecked_ids)
             for sid in checked_ids:
+                print("TRUE", sid,event)
                 points = int(request.form.get(f"{event}_{sid}_points", 0))
-                print(points)
                 evdb.markRes(ecur, event, sid, points, "finals", True)
             for sid in unchecked_ids:
+                print("FALSE", sid,event)
                 points = int(request.form.get(f"{event}_{sid}_points", 0))
-                print(points)
                 evdb.markRes(ecur,event, sid, points, "finals", False)
         econn.commit()
         certdb.genMerits()

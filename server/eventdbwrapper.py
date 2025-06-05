@@ -42,8 +42,6 @@ def markRes(cur, event, sid, points, round, pref=False):
         cur.execute(sql.SQL("""UPDATE {res} SET points=%s WHERE sid = %s""").format(res=res), (points, sid))
     else:
         res=sql.Identifier(event+"ResultsFin")
-        if pref:
-            print(event, sid, pref)
         cur.execute(sql.SQL("""UPDATE {res} SET points=%s, pref=%s WHERE sid = %s""").format(res=res), (points, pref, sid))
 
 def genAtt(curconn, event, round):
