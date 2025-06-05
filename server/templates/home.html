@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+    <p>
+        NEMISys HOME
+        <a href="/admin/">Go to admin</a>
+        <a href="/participants/">Go to participants</a>
+        <a href="/registry/">Go to registry</a>
+        <a href="/confirm/">Go to confirmation triggers</a>
+        <a href="/confirm/revert">Go to reversion triggers</a>
+        <a href="/certs/">Go to certificates</a>
+        <a href="/status/">Go to status</a>
+        <a href="/results/mod/">Go to results</a>
+        <a href="/stats/">Go to stats</a>
+        <form>
+            <select id = "event" name="event">
+            {% for event in events %}
+                <option value="{{event}}">{{event}}</option>
+            {% endfor %}
+            </select>
+            <button type="submit">Go to event</button>
+        </form>
+    </p>
+{% endblock %}

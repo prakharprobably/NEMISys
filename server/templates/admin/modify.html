@@ -35,12 +35,11 @@
             {% set perms = oldData[5] if oldData else [] %}
             {% for code, label in [
                 ('TC', 'Teacher Incharge'),
-                ('EI', 'Event Head'),
+                ('EI', 'Overall Incharge'),
                 ('SI', 'Event Incharge'),
-                ('LH', 'Liaisoning Head'),
-                ('LS', 'Liaisoning Staff'),
-                ('JD', 'Judge'),
+                ('CW', 'Certificate Writer'),
                 ('RC', 'Result Compilation'),
+                ('RG', 'Registrar'),
                 ('VL', 'Volunteer')] %}
                 <input type="checkbox" id="{{ label | replace(' ', '') }}"
                        name="permissions" value="{{ code }}"
