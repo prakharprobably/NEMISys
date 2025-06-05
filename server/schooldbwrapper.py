@@ -65,7 +65,21 @@ def getGreatestSid(cur):
         return 2
     return int(sid[0][3:6]) - 100
 
-if __name__ == '__main__':
+def getTranslation():
+    cur,conn = open()
+    try:
+        cur.execute("""SELECT sid, sname FROM Schools""")
+        data = cur.fetchall()
+        snames={  }
+        for row in data:
+            sid = row[0]
+            sname=row[1]
+            snames[sname] = sid
+        return snames
+    finally:
+        close((cur,conn))
+
+if __name__ == '__main__': 
     cur,conn = open()
     cur.execute("""DROP TABLE Schools""")
     conn.commit()
