@@ -1,34 +1,36 @@
 from flask import Blueprint, render_template,request,redirect,url_for,flash
 from .auth import protect, withName
 from .attendancedbwrapper import getBySchool, markPresent, open, confirm, close
+from .schooldbwrapper import getTranslation
 
 regatt = Blueprint('regatt', __name__)
 @regatt.route('/', methods = ['GET','POST'])
 @protect(['EI','TC','RG'])
 @withName
 def home(UUID,NAME):
+    translation = getTranslation()
+    snames = list(translation.keys())
     if request.method == 'POST':
-        sid = request.form['sid']
-        print(f"POSTed SID = {sid}")
+        sname = request.form['sname']
+        try:
+            sid =  translation[sname]
+        except:
+            sid = None
         return redirect(url_for('regatt.attendance', sid=sid))
-    return render_template('regattendance.html', uuid=UUID, name=NAME)
+    return render_template('regattendance.html', uuid=UUID, name=NAME, snames=snames)
 
 @regatt.route('/attendance', methods = ['GET', 'POST'])
 @protect(['EI','TC','RG'])
 def attendance(UUID):
     if request.method == 'GET':
-        print(request.method)
         sid = request.args.get('sid')
-        print(f"sid={sid}")
         if not sid:
             return "No SID provided", 400
         data = getBySchool(sid)
         return render_template('attendance.html', data=data)
     if request.method == 'POST':
-        print(request.method)
         cur, conn = open()
         sid = request.args.get('sid')
-        print(f"sid={sid}")
         if not sid:
             return "No SID provided", 400
     
