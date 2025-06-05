@@ -165,3 +165,27 @@ def getQualifyingParts(event):
         return {}
     finally:
         close((cur, conn))
+
+def setOveralls(sid, points):
+    cur,conn = open()
+    cur.execute("""UPDATE Results SET points = %s WHERE sid = %s""",(points, sid))
+    conn.commit()
+    close((cur,conn))
+
+def setFirsts(sid, firsts):
+    cur,conn = open()
+    cur.execute("""UPDATE Results SET firsts = %s WHERE sid = %s""",(firsts, sid))
+    conn.commit()
+    close((cur,conn))
+
+def setSeconds(sid, seconds):
+    cur,conn = open()
+    cur.execute("""UPDATE Results SET seconds = %s WHERE sid = %s""",(seconds, sid))
+    conn.commit()
+    close((cur,conn))
+
+def setThirds(sid, thirds):
+    cur,conn = open()
+    cur.execute("""UPDATE Results SET thirds = %s WHERE sid = %s""",(thirds, sid))
+    conn.commit()
+    close((cur,conn))

@@ -54,7 +54,6 @@ def init():
 def setStatus(curconn, event, status):
     cur,conn = curconn
     cur.execute("""UPDATE Status SET status = %s WHERE event = %s""", (status, event))
-    print(f"set {event} as {status}")
 
 def getStatusTable():
     cur,conn = open()

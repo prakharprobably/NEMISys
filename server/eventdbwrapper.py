@@ -36,12 +36,15 @@ def markAtt(cur, event, pid, attendance, round):
     if (event not in onsites or event in preprels) and round == "prelims":
         cur.execute("""UPDATE Participants SET attendance=%s WHERE pid = %s""",(attendance, pid))
 
-def markRes(cur, event, sid, points, round):
+def markRes(cur, event, sid, points, round, pref=False):
     if round=="prelims":
         res=sql.Identifier(event+"ResultsPri")
+        cur.execute(sql.SQL("""UPDATE {res} SET points=%s WHERE sid = %s""").format(res=res), (points, sid))
     else:
         res=sql.Identifier(event+"ResultsFin")
-    cur.execute(sql.SQL("""UPDATE {res} SET points=%s WHERE sid = %s""").format(res=res), (points, sid))
+        if pref:
+            print(event, sid, pref)
+        cur.execute(sql.SQL("""UPDATE {res} SET points=%s, pref=%s WHERE sid = %s""").format(res=res), (points, pref, sid))
 
 def genAtt(curconn, event, round):
     cur,conn=curconn
@@ -155,7 +158,7 @@ def getResTable(event, round):
         data = [head]+list(cur.fetchall())
         return data
     except:
-        return {}
+        return []
     finally:
         close((cur,conn))
 
