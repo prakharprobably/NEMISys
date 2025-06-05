@@ -15,7 +15,7 @@ with open(CREDS_PATH, 'r') as f:
 results = Blueprint('results', __name__)
 
 @results.route('/raw', methods = ['GET','POST'])
-@protect(['EI','TC'])
+@protect(['EI','TC', 'RC'])
 @withName
 def raw(UUID, NAME):
     cur,conn = resdb.open()
@@ -28,7 +28,7 @@ def raw(UUID, NAME):
     return render_template("results.html", results = results)
 
 @results.route('/mod', methods=['GET', 'POST'])
-@protect(['EI', 'TC'])
+@protect(['EI', 'TC', 'RC'])
 @withName
 def home(UUID, NAME):
     cur, conn = resdb.open()
