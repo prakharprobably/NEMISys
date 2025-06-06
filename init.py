@@ -6,7 +6,7 @@ import server.participantdbwrapper as participantdb
 import server.schooldbwrapper as schooldb
 import server.staffdbwrapper as staffdb
 import server.tokendbwrapper as tokendb
-import server.statsdbwrapper as statusdb
+import server.statusdbwrapper as statusdb
 import hashlib
 
 import psycopg2
