@@ -12,7 +12,7 @@ with open(CREDS_PATH, 'r') as f:
 certs = Blueprint('certs', __name__)
 
 @certs.route('/', methods = ['GET','POST'])
-@protect(['EI','TC'])
+@protect(['EI','TC','CW'])
 @withName
 def home(UUID, NAME):
     cur,conn = certdb.open()

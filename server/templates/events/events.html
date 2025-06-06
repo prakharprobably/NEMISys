@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Manage {{ event }}{% endblock %}
 {% block body %}
-<h>{{event}}</h>
+<h1>{{event}}</h1>
 <br/>
 {% if preld %}
     <a href="/events/{{event}}/attendance/prelims">Mark Prelims Attendance</a>
-    <a href="/events/{{event}}/attendance/finals">Mark Finals Attendance</a>
     <a href="/events/{{event}}/grade/prelims">Grade Prelims</a>
+    <a href="/events/{{event}}/attendance/finals">Mark Finals Attendance</a>
     <a href="/events/{{event}}/grade/finals">Grade Finals</a>
 {% else %}
     <a href="/events/{{event}}/attendance/finals">Mark Attendance</a>

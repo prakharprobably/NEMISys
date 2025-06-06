@@ -20,6 +20,11 @@ def open():
     cur = con.cursor()
     return cur,con
 
+def close(curconn):
+    cur,conn=curconn
+    cur.close()
+    conn.close()
+
 def markAtt(cur, event, pid, attendance, round):
     if round=="finals":
         att=sql.Identifier(event+"AttendanceFin")
@@ -31,12 +36,13 @@ def markAtt(cur, event, pid, attendance, round):
     if (event not in onsites or event in preprels) and round == "prelims":
         cur.execute("""UPDATE Participants SET attendance=%s WHERE pid = %s""",(attendance, pid))
 
-def markRes(cur, event, sid, points, round):
+def markRes(cur, event, sid, points, round, pref=False):
     if round=="prelims":
         res=sql.Identifier(event+"ResultsPri")
+        cur.execute(sql.SQL("""UPDATE {res} SET points=%s WHERE sid = %s""").format(res=res), (points, sid))
     else:
         res=sql.Identifier(event+"ResultsFin")
-    cur.execute(sql.SQL("""UPDATE {res} SET points=%s WHERE sid = %s""").format(res=res), (points, sid))
+        cur.execute(sql.SQL("""UPDATE {res} SET points=%s, pref=%s WHERE sid = %s""").format(res=res), (points, pref, sid))
 
 def genAtt(curconn, event, round):
     cur,conn=curconn
@@ -49,6 +55,8 @@ def genAtt(curconn, event, round):
             pass
         elif event not in onsites or event in prePrels: #if the round is supposed to be pregraded
             att=sql.Identifier(event+"AttendancePri")
+            cur.execute(sql.SQL("""DROP TABLE IF EXISTS{att}""").format(att=att))
+            conn.commit()
             cur.execute(sql.SQL("""CREATE TABLE {att} AS
                                 SELECT pid, name, class, sid, sname FROM Participants 
                                 WHERE event = %s""").format(att=att), (event,))
@@ -56,6 +64,8 @@ def genAtt(curconn, event, round):
         else:
             #prelims table for prelims
             att=sql.Identifier(event+"AttendancePri")
+            cur.execute(sql.SQL("""DROP TABLE IF EXISTS{att}""").format(att=att))
+            conn.commit()
             cur.execute(sql.SQL("""CREATE TABLE {att} AS
                                 SELECT pid, name, class, sid, sname FROM Participants 
                                 WHERE event = %s AND attendance = TRUE""").format(att=att), (event,))
@@ -63,6 +73,8 @@ def genAtt(curconn, event, round):
     else: #round is finals
         #generate finals table
         fin=sql.Identifier(event+"AttendanceFin")
+        cur.execute(sql.SQL("""DROP TABLE IF EXISTS{fin}""").format(fin=fin))
+        conn.commit()
         if event in prelds: #if event is not finals only
             res=sql.Identifier(event+"ResultsPri")
             pri=sql.Identifier(event+"AttendancePri")
@@ -86,11 +98,15 @@ def genRes(curconn, event, round):
         else:
             res=sql.Identifier(event+"ResultsPri")
             att=sql.Identifier(event+"AttendancePri")
+            cur.execute(sql.SQL("""DROP TABLE IF EXISTS {res}""").format(res=res))
+            conn.commit()
             cur.execute(sql.SQL("""SELECT sid, sname INTO {res} FROM {att}  WHERE attendance = TRUE GROUP BY sid, sname""").format(res=res, att=att))
             cur.execute(sql.SQL("""ALTER TABLE {res} ADD COLUMN points INT DEFAULT 0""").format(res=res))
     else:
         #finals results table
         fin=sql.Identifier(event+"ResultsFin")
+        cur.execute(sql.SQL("""DROP TABLE IF EXISTS {fin}""").format(fin=fin))
+        conn.commit()
         if event in prelds:
             pri=sql.Identifier(event+"ResultsPri")
             limit = creds["limit"][event]
@@ -109,11 +125,16 @@ def getAttTable(event, round):
         att=sql.Identifier(event+"AttendanceFin")
     else:
         att=sql.Identifier(event+"AttendancePri")
-    cur.execute(sql.SQL("""SELECT pid, name, class, attendance, sname, sid FROM {att}""").format(att=att))
-    head = [desc[0] for desc in cur.description]
-    data = [head]+list(cur.fetchall())
-    close((cur,conn))
-    return data
+    try:
+        cur.execute(sql.SQL("""SELECT pid, name, class, attendance, sname, sid FROM {att}""").format(att=att))
+        head = [desc[0] for desc in cur.description]
+        data = [head]+list(cur.fetchall())
+        return data
+    except:
+        return {}
+    finally:
+        close((cur,conn))
+    
 
 def genWinTable(cur, event):
     win = sql.Identifier(event + "Winners")
@@ -129,16 +150,15 @@ def getResTable(event, round):
         res=sql.Identifier(event+"ResultsFin")
     else:
         res=sql.Identifier(event+"ResultsPri")
-    cur.execute(sql.SQL("""SELECT * FROM {res}""").format(res=res))
-    head = [desc[0] for desc in cur.description]
-    data = [head]+list(cur.fetchall())
-    close((cur,conn))
-    return data
-
-def close(curconn):
-    cur,conn=curconn
-    cur.close()
-    conn.close()
+    try:
+        cur.execute(sql.SQL("""SELECT * FROM {res}""").format(res=res))
+        head = [desc[0] for desc in cur.description]
+        data = [head]+list(cur.fetchall())
+        return data
+    except:
+        return []
+    finally:
+        close((cur,conn))
 
 if __name__ == "__main__":
     cur,conn = open()

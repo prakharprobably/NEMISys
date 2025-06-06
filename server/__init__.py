@@ -13,6 +13,8 @@ def create(key):
     from .results import results
     from .about import about
     from .certs import certs
+    from .status import status
+    from .stats import stats
     app.register_blueprint(routes, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(admin, url_prefix='/admin/')
@@ -24,6 +26,8 @@ def create(key):
     app.register_blueprint(results, url_prefix='/results/')
     app.register_blueprint(about, url_prefix='/about/')
     app.register_blueprint(certs, url_prefix='/certs/')
+    app.register_blueprint(status, url_prefix='/status/')
+    app.register_blueprint(stats, url_prefix='/stats/')
     for rule in app.url_map.iter_rules():
         print(f"{rule.endpoint}: {rule}")
     return app

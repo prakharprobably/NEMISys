@@ -2,6 +2,7 @@ from flask import Blueprint, render_template,request,redirect,url_for,flash
 from . import staffdbwrapper as sdb
 from . import eventdbwrapper as evdb
 from .auth import protect, withName
+from . import statusdbwrapper as statusdb
 import json
 import os
 
@@ -63,6 +64,10 @@ def attendance(UUID, NAME, event, round):
             evdb.markAtt(ecur,event, pid, True, round)
         for pid in unchecked_ids:
             evdb.markAtt(ecur,event, pid, False, round)
+        if round == "prelims":
+            statusdb.setStatus((ecur,econn), event=event, status=2)
+        else:
+            statusdb.setStatus((ecur,econn), event=event, status=4)
         evdb.genRes((ecur,econn),uEvent,round)
         econn.commit()
         ecur.close()
@@ -92,18 +97,48 @@ def grade(UUID, NAME, event, round):
         if request.method == 'POST':
             ecur,econn = evdb.open()
             data = evdb.getResTable(event, round)
+            resInd = data[0].index("points")
             print(*data, sep="\n")
             print(request.form)
-            for sid in request.form:
-                evdb.markRes(ecur, event, sid, int(request.form[sid]), round)
+            if round=="prelims":
+                for sid in request.form:
+                    evdb.markRes(ecur, event, sid, int(request.form[f"{sid}_points"]), "prelims")
+            else:
+                all_ids = {row[0] for row in data[1:]}
+                checked_ids = {key.rsplit('_', 1)[0] for key in request.form if key.endswith("pref") and '1' in request.form.getlist(key)}
+                unchecked_ids = all_ids - checked_ids
+                print(checked_ids)
+                for sid in checked_ids:
+                    points = int(request.form.get(f"{sid}_points", 0))
+                    print(points)
+                    evdb.markRes(ecur, event, sid, points, "finals", True)
+                for sid in unchecked_ids:
+                    points = int(request.form.get(f"{sid}_points", 0))
+                    evdb.markRes(ecur,event, sid, points, "finals", False)
         if round=="prelims":
             evdb.genAtt((ecur,econn),event,"finals")
+            statusdb.setStatus((ecur,econn), event, status=3)
         else:
             evdb.genWinTable(ecur, event)
+            statusdb.setStatus((ecur,econn), event, status=5)
         econn.commit()
         ecur.close()
         econn.close()
         data = evdb.getResTable(uEvent, round)
-        return render_template('/events/results.html', data=data, uuid=UUID, name=NAME, event="uEvent")
+        return render_template('/events/results.html', data=data, uuid=UUID, name=NAME, event="uEvent", resInd = resInd)
     else:
         return redirect(url_for(f'/events/'))
+    '''
+    data = evdb.getResTable(event, "finals")[1:]  # Skip header
+            all_ids = {row[0] for row in data[1:]}
+            checked_ids = {key.rsplit('_', 2)[1] for key in request.form if key.endswith("_pref") and request.form[key] == "1"}
+            unchecked_ids = all_ids - checked_ids
+            for sid in checked_ids:
+                points = int(request.form.get(f"{event}_{sid}_points", 0))
+                print(points)
+                evdb.markRes(ecur, event, sid, points, "finals", True)
+            for sid in unchecked_ids:
+                points = int(request.form.get(f"{event}_{sid}_points", 0))
+                print(points)
+                evdb.markRes(ecur,event, sid, points, "finals", False)
+    '''
