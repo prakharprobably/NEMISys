@@ -36,13 +36,10 @@ def close(curconn):
 
 def init():
     cur,conn = open()
-    cur.execute("""DROP TABLE IF EXISTS Status""")
-    conn.commit()
-    cur.execute("""CREATE TABLE IF NOT EXISTS Status(
-        event VARCHAR(20),
-        status INT DEFAULT 0
-    )""")
     try:
+        cur.execute("""CREATE TABLE IF NOT EXISTS Status(
+        event VARCHAR(20),
+        status INT DEFAULT 0)""")
         events = creds["Events"]
         conn.commit()
         for event in events:
