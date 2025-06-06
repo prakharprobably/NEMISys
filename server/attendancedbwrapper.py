@@ -72,6 +72,25 @@ def getBySchool(sid):
     connection.close()
     return data
 
+def modPart(cur, pid, name=None, clss=None, event=None, sid=None):
+    fields = []
+    values = []
+    if name:
+        fields.append("name = %s")
+        values.append(name)
+    if clss:
+        fields.append("class = %s")
+        values.append(clss)
+    if event:
+        fields.append("event = %s")
+        values.append(event)
+    if sid:
+        fields.append("sid = %s")
+        values.append(sid)
+    values.append(pid)  # for WHERE clause
+    query = f"UPDATE Attendance SET {', '.join(fields)} WHERE pid = %s"
+    cur.execute(query, tuple(values))
+
 def markPresent(cur, pid, attendance):
     cur.execute("""UPDATE Attendance SET attendance=%s WHERE pid = %s""", (attendance, pid))
     partdb.markPresent(cur,pid,attendance=attendance)

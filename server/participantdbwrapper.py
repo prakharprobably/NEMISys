@@ -3,6 +3,7 @@ from psycopg2 import sql
 import json
 import os
 from  . import eventdbwrapper as evdb
+from . import statusdbwrapper as statusdb
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CREDS_PATH = os.path.join(BASE_DIR, 'creds.json')
 
@@ -66,20 +67,17 @@ def modPart(cur, pid, name=None, clss=None, event=None, sid=None):
     if name:
         fields.append("name = %s")
         values.append(name)
-    if cls:
+    if clss:
         fields.append("class = %s")
-        values.append(cls)
-    if section:
-        fields.append("section = %s")
-        values.append(section)
+        values.append(clss)
     if event:
         fields.append("event = %s")
         values.append(event)
-    if perms:
-        fields.append("perms = %s")
-        values.append(perms)
-    values.append(uuid)  # for WHERE clause
-    query = f"UPDATE Participants SET {', '.join(fields)} WHERE uuid = %s"
+    if sid:
+        fields.append("sid = %s")
+        values.append(sid)
+    values.append(pid)  # for WHERE clause
+    query = f"UPDATE Participants SET {', '.join(fields)} WHERE pid = %s"
     cur.execute(query, tuple(values))
 
 
@@ -102,6 +100,7 @@ def seperateIntoEvents(curconn):
             evdb.genAtt(curconn, event, "prelims")
         else:
             evdb.genAtt(curconn, event, "finals")
+    statusdb.setStatusIfLower(curconn, 1)
     conn.commit()
     print("SEPERATED")
 
@@ -110,6 +109,7 @@ def seperatePregrads(curconn):
     onlPrels = creds["pregradPrels"]
     for event in onlPrels:
         evdb.genAtt((cur,conn), event=event, round="prelims")
+        statusdb.setStatus((cur,conn), event, 1)
 
 def revert(curconn):
     cur,conn = curconn
@@ -121,7 +121,8 @@ def revert(curconn):
         finres=sql.Identifier(event+"ResultsFin")
         wins = sql.Identifier(event+"Winners")
         cur.execute(sql.SQL("""DROP TABLE IF EXISTS {priatt}, {finatt},{prires},{finres}, {wins}, Attendance, Results, MeritCerts, AppCerts, PartCerts""").format(priatt=priatt,prires=prires,finatt=finatt, finres=finres, wins = wins))
-        conn.commit()
+    statusdb.reset()
+    conn.commit()
 
 def getGreatestPid(cur):
     cur.execute("""SELECT pid FROM Participants ORDER BY pid DESC LIMIT 1;""")

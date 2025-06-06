@@ -30,7 +30,7 @@ def views(UUID):
     return render_template("table.html",data=data)
 
 @manage.route('/uploaddata', methods=['GET', 'POST'])
-@protect(['EI', 'TC'])
+@protect(['EI', 'TC', 'RG'])
 def upload(UUID):
     if request.method == 'POST':
         if 'file' not in request.files:

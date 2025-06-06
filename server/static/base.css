@@ -1,0 +1,325 @@
+@font-face {
+    font-family: 'Vercetti';
+    src: url('/static/fonts/Vercetti-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Dimitri';
+    src: url('/static/fonts/DimitriSwank.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Vercetti';
+    color: #FFFFFF;
+    background-color: #000000;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+a:link, a:visited {
+    border: 1px solid #C8ACD6;
+    border-radius: 12px;
+    padding: 5px 10px;
+    color: #C8ACD6;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a:hover, a:active {
+    background-color: #433D8B;
+    color: white;
+}
+
+header a:link, .header a:visited {
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    border:  none;
+    border-radius: 0;
+    height: 100%; /* Fills parent li height */
+    padding: 0 15px; /* Horizontal padding only */
+    color: #C8ACD6;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+header {
+  color: #C8ACD6;
+  background-color: #2E236C;
+  padding: 0px 0px;
+}
+
+header ul {
+  display: flex;
+  align-items: stretch; /* Make children fill height */
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+header li {
+  display: flex;
+  align-items: center; /* Center content vertically */
+}
+
+header a:hover {
+  background-color: #433D8B;
+  color: white;
+}
+
+.accountIndicator{
+    padding: 10px 10px;
+}
+
+header .accountIndicator a:link, header .accountIndicator a:visited {
+    display: inline;
+    padding: 0 !important;
+}
+
+.vnav ul{
+    margin: 0;
+    padding: 0;
+    width: 190px;
+}
+
+.manager {
+  display: flex;
+  flex-wrap: wrap;               /* Allows wrapping on small screens */
+  gap: 20px;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+.vnav{
+    flex: 0 0 225px; 
+}
+
+.vnav li{
+  display: block;
+  width: 100%;
+}
+
+.vnav a{
+    display: inline-block;
+    width: 225px; /* fixed width — adjust as needed */
+    padding: 5px 12px;
+    text-align: left; /* or left, if you prefer */
+    border: none;
+    border-radius: 0px;
+    white-space: nowrap; /* prevents wrapping */
+}
+
+.panel iframe {
+  border-left: 1 px;
+  border-left-style: solid;
+  border-right-style: none;
+  border-top-style: none;
+  border-bottom-style: none;
+  flex:1;
+  min-width: 300px;
+}
+
+.vnav form{
+    width:100%
+}
+
+.vnav input[type="text"]{
+    width: 100%;
+    margin: 10px;
+    box-sizing: border-box;
+}
+.vnav button{
+    width: 100%;
+    margin: 10px;
+}
+
+footer{
+    bottom: 0;
+    left:0;
+    width: 100%;
+    text-align: center;
+    border: 1px;
+    border-color: #C8ACD6;
+    border-top-style: solid;
+    border-left-style: none;
+    border-right-style: none;
+    border-bottom-style: none;
+    background-color: #17153B;
+}
+
+footer a:link, footer a:visited {
+    border: none;
+    padding: 0;
+}
+
+.eventName{
+    font-family: 'Dimitri';
+}
+
+.table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+}
+
+table {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+}
+
+th, td {
+    border: 1px solid #FFFFFF;
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap; /* Important for horizontal scrolling */
+}
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* full viewport height */
+}
+.content {
+  flex: 1; /* take remaining vertical space */
+  padding: 20px; /* optional spacing */
+}
+
+.footer {
+  background-color: #000;
+  color: #C8ACD6;
+  padding: 10px 20px;
+  text-align: center;
+  border-top: 1px solid #C8ACD6;
+}
+
+input {
+    background-color: #000000;
+    border: 1px solid #C8ACD6;
+    border-radius: 12px;
+    color: #C8ACD6;
+}
+button[type=submit], input[type=button], input[type=submit], input[type=reset] {
+    background-color: #000000;
+    border: 1px solid #C8ACD6;
+    border-radius: 12px;
+    padding: 5px 10px;
+    color: #C8ACD6;
+    display: inline-block;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+ button[type=submit]:hover, input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
+    background-color: #433D8B;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+input[type="text"]{
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+input[type="text"]:focus{
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    border: 1px solid #FFFFFF;
+    color:#FFFFFF;
+    outline: none;
+}
+
+input[type=file], input[type=button], input[type=submit], input[type=reset] {
+    background-color: #000000;
+    border: 1px solid #C8ACD6;
+    border-radius: 12px;
+    padding: 5px 10px;
+    color: #C8ACD6;
+    display: inline-block;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+input[type=file]:hover, input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
+    background-color: #433D8B;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+select{
+    background-color: #000000;
+    border: 1px solid #C8ACD6;
+    border-radius: 12px;
+    padding: 5px 10px;
+    color: #C8ACD6;
+    display: inline-block;
+}
+
+input[type="checkbox"]{
+    accent-color: #000000;
+    borderborder: 1px solid #C8ACD6;
+}
+
+.loginPageWrapper {
+    background-color: #17153B;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginContainer{
+    background-color: #000000;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+    width: 400px;
+    max-width: 90%;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.loginContainer h1 {
+    margin-bottom: 10px;
+    font-size: 1.8em;
+}
+
+.loginContainer p {
+    margin-bottom: 30px;
+    font-size: 1em;
+}
+
+.loginContainer label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #C8ACD6;
+}
+
+.loginContainer input[type="text"],
+.loginContainer input[id="uuid"],
+.loginContainer input[type="password"] {
+    width: 100%;
+    background-color: #000000;
+    border: 1px solid #C8ACD6;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    color: #C8ACD6;
+    box-sizing: border-box;
+    text-align: center;
+}

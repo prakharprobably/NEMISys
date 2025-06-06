@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Grade {{ event }} {% endblock %}
+{% block body %}
+<h2>Grade Results for {{ event }}</h2>
+<style>
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        width: max-content;
+        min-width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+        white-space: nowrap; /* Important for horizontal scrolling */
+    }
+
+    input[type="checkbox"] {
+        transform: scale(1.2);
+        margin: 4px;
+    }
+
+    input[type="submit"] {
+        margin-top: 16px;
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+</style>
+<form method="POST">
+    <div class="table-wrapper">
+        
+    {% for event in results %}
+    <h2>Finals result for {{event}}</h2>
+    <table>
+            <tr>
+        {% for header in results[event][0] %}
+                <th>{{ header }}</th>
+        {% endfor %}
+        </tr>
+        {% for row in results[event][1:] %}
+        <tr>
+            {% for cell in row %}
+                {% set i = loop.index0 %}
+                {% if event == "Overalls"%}
+                    {% if i == resInd %}
+                        <td>
+                            <input type="text" id="{{ event }}_{{ row[0] }}_points" name="{{ event }}_{{ row[0] }}_points" value="{{cell}}">
+                        </td>
+                    {% elif i == resInd + 1%}
+                        <td>
+                            <input type="text" id="{{ event }}_{{ row[0] }}_firsts" name="{{ event }}_{{ row[0] }}_firsts" value="{{cell}}">
+                        </td>
+                    {% elif i == resInd + 2%}
+                        <td>
+                            <input type="text" id="{{ event }}_{{ row[0]}}_seconds }}" name="{{ event }}_{{ row[0] }}_seconds" value="{{cell}}">
+                        </td>
+                    {% elif i == resInd + 3%}
+                        <td>
+                            <input type="text" id="{{ event }}_{{ row[0] }}_thirds" name="{{ event }}_{{ row[0] }}_thirds" value="{{cell}}">
+                        </td>
+                    {% else %}
+                        <td>{{ cell }}</td>
+                    {% endif %}
+                {% else %}
+                    {% if i == resInd %}
+                        <td>
+                            <input type="text" id="{{ event }}_{{ row[0] }}_points" name="{{ event }}_{{ row[0] }}_points" value="{{cell}}">
+                        </td>
+                    {% elif i == resInd + 1%}
+                        <td>
+                            <input type="hidden" name="{{ event }}_{{ row[0] }}_pref" value="0">
+                            <input type="checkbox" name="{{ event }}_{{ row[0] }}_pref" value="1" {% if cell %}checked{% endif %}>
+                        </td>
+                    {% else %}
+                        <td>{{ cell }}</td>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+
+    </table>
+{% endfor %}
+    </div>
+    <input type="submit" value="Update Results">
+</form>
+{% endblock %}
+
+

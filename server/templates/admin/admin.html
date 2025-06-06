@@ -1,16 +1,22 @@
 {% extends "base.html" %}
 {% block title %}Admin Panel{% endblock %}
 {% block body %}
-<h>Adminstrative Settings</h>
+<h1>Adminstrative Settings</h1>
 <p>
     what do you want to do?
-    <ul>
-    <li><a href="/admin/view", target="actionPanel">view staffdb</a></li>
-    <li><a href="/admin/insert", target="actionPanel">create staff</a></li>
-    <li><a href="/admin/modify", target="actionPanel">modify staff</a></li>
-    <li><a href="/admin/remove", target="actionPanel">delete staff</a></li>
-    <li><a href="/admin/resetpassword", target="actionPanel">modify staff password</a></li>
-    </ul>
-    <iframe name="actionPanel" src="/admin/view", height="400", width="800"></iframe>
+    <div class="manager">
+        <div class="vnav">
+            <ul>
+                <li><a href="/admin/view", target="actionPanel">view staffdb</a></li>
+                <li><a href="/admin/insert", target="actionPanel">create staff</a></li>
+                <li><a href="/admin/modify", target="actionPanel">modify staff</a></li>
+                <li><a href="/admin/remove", target="actionPanel">delete staff</a></li>
+                <li><a href="/admin/resetpassword", target="actionPanel">modify staff password</a></li>
+            </ul>
+        </div>
+        <div class="panel">
+            <iframe name="actionPanel" src="/admin/view", height="400", width="800"></iframe>
+        </div>
+    </div>
 </p>
 {% endblock %}

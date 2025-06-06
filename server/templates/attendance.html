@@ -1,7 +1,5 @@
 {% extends "base.html" %}
-{% block title %} 
-    {{ Title }} 
-{% endblock %}
+{% block title %} {{ Title }} {% endblock %}
 {% block body %}
 <form method="POST">
 <table>
@@ -9,16 +7,18 @@
         {% for element in data[0] %}
             <th>{{ element }}</th>
         {% endfor %}
-        <th>Present</th>  {# Add a header for the checkbox column #}
     </tr>
     {% for row in data[1:] %}
     <tr>
-        {% for cell in row %}
-            <td>{{ cell }}</td>
-        {% endfor %}
+        {% set pid = row[0] %}
+        <td>{{ pid }}</td>
+        <td><input type="text" name="name_{{ pid }}" value="{{ row[1] }}"></td>
+        <td><input type="number" name="class_{{ pid }}" value="{{ row[2] }}"></td>
+        <td>{{ row[3] }}</td>  {# event name, no need to edit here #}
+        <td>{{ row[4] }}</td>
+        <td>{{ row[5] }}</td>  {# school name #}
         <td>
-            <input type="checkbox" name="attendance_{{ row[0] }}" {% if row[-1] %}checked{% endif %}>
-            <input type="hidden" name="unchecked_ids" value="{{ row[0] }}" {% if row[-1] %}disabled{% endif %}>
+            <input type="checkbox" name="attendance_{{ pid }}" {% if row[6] %}checked{% endif %}>
         </td>
     </tr>
     {% endfor %}
