@@ -1,18 +1,24 @@
 {% extends "base.html" %}
 {% block title %}Participant Management{% endblock %}
 {% block body %}
-<h>Participant Management</h>
+<h1>Participant Management</h1>
 <p>
     what do you want to do?
-    <ul>
-    <li><a href="/participants/viewparticipants", target="actionPanel">view participantdb</a></li>
-    <li><a href="/participants/viewschools", target="actionPanel">view schooldb</a></li>
-    <li><a href="/participants/uploaddata", target="actionPanel">inherit data from spreadsheet</a></li>
-    <li><a href="/participants/modifyparticipant", target="actionPanel">modify participant</a></li>
-    <li><a href="/participants/modifyschool", target="actionPanel">modify school</a></li>
-    <li><a href="/participants/disqualify", target="actionPanel">disqualify participant</a></li>
-    <li><a href="/participants/disqualifyschool", target="actionPanel">disqualify school</a></li>
-    </ul>
-    <iframe name="actionPanel" src="/participants/viewparticipants", height="400", width="800"></iframe>
+    <div class="manager">
+        <div class="vnav">
+            <ul class = "vnav">
+                <li><a href="/participants/viewparticipants", target="actionPanel">view participantdb</a></li>
+                <li><a href="/participants/viewschools", target="actionPanel">view schooldb</a></li>
+                <li><a href="/participants/uploaddata", target="actionPanel">inherit data from spreadsheet</a></li>
+                <li><a href="/participants/modifyparticipant", target="actionPanel">modify participant</a></li>
+                <li><a href="/participants/modifyschool", target="actionPanel">modify school</a></li>
+                <li><a href="/participants/disqualify", target="actionPanel">disqualify participant</a></li>
+                <li><a href="/participants/disqualifyschool", target="actionPanel">disqualify school</a></li>
+            </ul>
+        </div>
+        <div class="panel">
+            <iframe name="actionPanel" src="/participants/viewparticipants", height="400", width="800"></iframe>
+        </div>
+    </div>
 </p>
 {% endblock %}
