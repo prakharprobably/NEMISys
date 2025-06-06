@@ -2,6 +2,8 @@
 {% block title %}Registrations{% endblock %}
 {% block body %}
 <h2>Enter School ID</h2>
+    <a href="/participants/uploaddata" target="actionPanel">Add more data</a>
+    <a href="/registry/attendance" target="actionPanel">Manage attendance</a>    
     <form method="POST", target="actionPanel">
         <input type="text" name="sname" list="sname" required>
             <datalist id="sname">
