@@ -271,7 +271,7 @@ select{
 
 input[type="checkbox"]{
     accent-color: #000000;
-    borderborder: 1px solid #C8ACD6;
+    border: 1px solid #C8ACD6;
 }
 
 .loginPageWrapper {
