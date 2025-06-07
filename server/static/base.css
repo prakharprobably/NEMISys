@@ -171,6 +171,13 @@ footer a:link, footer a:visited {
     font-family: 'Dimitri';
 }
 
+.year {
+  font-family: 'Vercetti';
+  font-size: 0.6em;
+  position: absolute;
+  transform: translate(-100%, 125%);
+}
+
 .table-wrapper {
         width: 100%;
         overflow-x: auto;
