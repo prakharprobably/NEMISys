@@ -84,6 +84,8 @@ def home(UUID, NAME):
                 print("FALSE", sid,event)
                 points = int(request.form.get(f"{event}_{sid}_points", 0))
                 evdb.markRes(ecur,event, sid, points, "finals", False)
+            econn.commit()
+            evdb.genWinTable(ecur, event)
         econn.commit()
         certdb.genMerits()
         certdb.genParts()
