@@ -42,8 +42,8 @@ def inherit():
     events = creds["Events"]
     pregrads = creds["pregradPrels"]
     onsites = creds["onsiteEvents"]
-    for event in pregrads:
-        if event in onsites:
+    for event in onsites:
+        if event in pregrads:
             att_table = sql.Identifier(event + "AttendanceFin")
             cur.execute(sql.SQL("INSERT INTO Attendance SELECT pid, name, class, %s, sid, sname, attendance FROM {}").format(att_table), (event,)) # passes the event name as a value for the missing column)
         else:
