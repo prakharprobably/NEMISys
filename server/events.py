@@ -92,17 +92,20 @@ def grade(UUID, NAME, event, round):
         if request.method == 'GET':
             data = evdb.getResTable(event,round)
             resInd = data[0].index("points")
-            print(*data, sep="\n")
+            print("IN\n",*data, sep="\n")
             return render_template('/events/results.html', data=data, uuid=UUID, name=NAME, event=uEvent, resInd=resInd)
         if request.method == 'POST':
             ecur,econn = evdb.open()
             data = evdb.getResTable(event, round)
             resInd = data[0].index("points")
-            print(*data, sep="\n")
+            print("OUT\n",*data, sep="\n")
             print(request.form)
             if round=="prelims":
-                for sid in request.form:
-                    evdb.markRes(ecur, event, sid, int(request.form[f"{sid}_points"]), "prelims")
+                for key in request.form:
+                    if key.endswith("_points"):
+                        sid = key.rsplit("_", 1)[0]  # e.g. "S25103"
+                        points = int(request.form[key])  # safe: directly use value
+                        evdb.markRes(ecur, event, sid, points, "prelims")
             else:
                 all_ids = {row[0] for row in data[1:]}
                 checked_ids = {key.rsplit('_', 1)[0] for key in request.form if key.endswith("pref") and '1' in request.form.getlist(key)}
