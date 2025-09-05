@@ -74,6 +74,7 @@ def upload(UUID):
                     pid, name, pclass, event, sid, sname, _, discord = participant
 
                     # printInsert into Participants
+                    print(sid, len(sid))
                     cur_p, con_p = partdb.open()
                     partdb.insertParticipant(cur_p, pid, name, pclass, event, sid, sname, False)
                     partdb.confirm(con_p)
