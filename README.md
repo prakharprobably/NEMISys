@@ -1,5 +1,5 @@
 # About
-NEMISys stands for Networked Event Management and Integration System
+NEMISys stands for Networked Event Management and Integration System.
 During the management of events, it was found that there may be significant benefits to said events by automation. It stood a fact that a majority of the event management could be automated and centralised to a single database, and records modified therein. This would eleminate the need for elaborate human systems and reduce significant labour. Furthermore, this would also remove limitations from a more manual management of the event, allowing for a greater variety of subevents to take place, as automated result compilation would take mere seconds in the worst case, while that for human compilation does not scale very well with the amount of datapoints.
 NEMISys, in perticular, automates the tasks of - 
     1. Onboarding
